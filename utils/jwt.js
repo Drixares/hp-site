@@ -6,6 +6,7 @@ export const generateToken = (user) => {
   return jwt.sign({
     data: {
       email: user.email,
+      id: user.id
     }
   }, process.env.TOKEN_SECRET, 
   {

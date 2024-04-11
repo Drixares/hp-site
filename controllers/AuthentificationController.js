@@ -19,16 +19,18 @@ class AuthentificationController {
 
       if (!user) return res.status(404).json({ message: "User not found"});
 
-      // return res.status(200).json({
-      //   message: "User data found",
-      //   user: {
-      //     name: user.name,
-      //     email: user.email,
-      //     createdAt: user.createdAt
-      //   }
-      // })
+      return res.status(200).json({
+        message: "User data found",
+        user: {
+          name: user.name,
+          email: user.email,
+          createdAt: user.createdAt,
+          sentFriendRequests: user.sentFriendRequests,
+          receivedFriendRequests: user.receivedFriendRequests
+        }
+      })
 
-      return res.status(200).json(user);
+      // return res.status(200).json(user);
 
     } catch(error) {
       return res.status(500).json({ message: "Internal server error"})
