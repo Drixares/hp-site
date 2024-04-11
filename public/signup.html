@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://kit.fontawesome.com/d3a9f97c9c.js" crossorigin="anonymous"></script>
+  <script>
+    const token = localStorage.getItem('token');
+    if (token) {
+      window.location.href = '/dashboard';
+    }
+  </script>
+  <link rel="stylesheet" href="./css/form.css">
+  <title>Sign Up</title>
+</head>
+<body>
+  <div class="wrapper">
+
+    <div class="goBackBox">
+      <a href="/"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+
+    <div class="imgBox">
+      <img src="./ressources/images/background.jpg">
+    </div>
+    <div class="formBox">
+      <form class="formContainer">
+        <div class="textBox">
+          <h2>Sign up</h2>
+          <p>Create an account with your email and password.</p>
+        </div>
+        <div class="inputsBox">
+          <div class="inputsContainer">
+            <div class="inputElementBox">
+              <label for="formNickname">Nickname</label>
+              <input type="text" id="formNickname" placeholder="Enter your nickname" name="user">
+            </div>
+            <div class="inputElementBox">
+              <label for="formEmail">Email</label>
+              <input type="email" id="formEmail" placeholder="Enter your email" name="email" autocomplete="off">
+            </div>
+            <div class="inputElementBox">
+              <label for="formPassword">Password</label>
+              <input type="password" id="formPassword" placeholder="Enter your password" name="password">
+            </div>
+          </div>
+          <div class="moreBox">
+            <div class="rememberBox">
+              <input type="checkbox" name="remember" id="remember">
+              <label for="remember">Remember me</label>
+            </div>
+          </div>
+          <div id="formError"></div>
+        </div>
+
+        <div class="btnBox">
+          <button type="submit">Create your account</button>
+          <p class="accountQuestion">Already have an account ? &ThickSpace;<span><a href="/login">Use it !</a></span></p>
+        </div>
+      </form>
+    </div>
+
+  </div>
+  
+  <script src="./js/inscription.js"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+import vine, { errors } from '@vinejs/vine';
+import { v4 as uuidv4 } from 'uuid';
+import prisma from "../config/prisma.js";
+import { comparePassword, hashPassword } from '../utils/bcrypt.js';
+import { generateToken } from '../utils/jwt.js';
+import { loginValidator, storeUserValidator } from '../validators/userValidator.js';
+
+class UsersController {
+
+  async signup(req, res) {
+    const body = req.body;
+    try {
+      const output =  await vine.validate({
+        schema: storeUserValidator,
+        data: body
+      });
+      
+      const user =  await prisma.user.create({
+        data: {
+          id: uuidv4(),
+          email: output.email,
+          name: output.name,
+          password: await hashPassword(output.password),
+        }
+      });
+
+      const token = generateToken(user);
+
+      return res.status(201).json({ message: "User created successfully", token: token });
+
+    } catch (error) {
+      if (error instanceof errors.E_VALIDATION_ERROR) {
+        return res.status(400).json({ message: error.messages[0].message });
+      }
+
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  async login(req, res) {
+
+    try {
+
+      const body = req.body;
+
+      const output = await vine.validate({
+        schema: loginValidator,
+        data: body
+      })
+
+      const user = await prisma.user.findUnique({
+        where: {
+          email: output.email
+        }
+      })
+
+      if (!user) return res.status(404).json({ message: "User not found"});
+      const match = await comparePassword(body.password, user.password);
+      if (!match) return res.status(401).json({ message: "Invalid credentials"})
+
+      const token = generateToken(user)
+
+      return res.status(200).json({ message: "User connected !", token: token })
+
+    } catch (error) {
+      if (error instanceof errors.E_VALIDATION_ERROR) {
+        return res.status(500).json({ message: error.messages[0].message })
+      }
+
+      return res.status(500).json({ message: "Internal server error" })
+    }
+
+  }
+
+  async logout(req, res) {
+    return res.status(200).json({ message: "User logged out successfully" });
+  }
+}
+
+export default new UsersController();

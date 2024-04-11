@@ -1,0 +1,469 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --primary: #d7b972;
+  --text: #f5f5f5;
+  --text2: #121212;
+  --h1-size: calc(30px + 4vw);
+  /* --h2-size: 60px; */
+  --h2-size: calc(20px + 2vw);
+  --h3-size: calc(16px + 1vw);
+  --text-p-size: calc(14px + 0.2vw);
+  --text-m-size: calc(16px + 0.2vw);
+  --filter: #161927bd;
+  --bg: #161927;
+  --bg1: #212433;
+  --bg2: #383b4d;
+  --padding-inline: 5vw;
+  --padding-inline2: 15vw;
+  --green: #01c101;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 30px;
+  font-family: "Outfit", sans-serif;
+}
+
+html,
+.wrapper {
+  overflow-x: hidden;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+header {
+  position: relative;
+  /* background-color: var(--bg); */
+  background: no-repeat center url(../ressources/images/background.jpg);
+  background-size: cover;
+  height: 100vh;
+  /* color: var(--text); */
+  z-index: 3;
+}
+
+header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--filter);
+  z-index: -1;
+}
+
+header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(180deg, rgba(22, 25, 39, 0) 0%, #161927 100%);
+  z-index: -1;
+}
+
+header > .mainNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 125px;
+  width: 100%;
+  position: relative;
+}
+
+.navBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style-type: none;
+  gap: 4vw;
+}
+
+.navLink {
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-size: var(--text-p-size);
+}
+
+.boxIcon {
+  position: absolute;
+  top: 50%;
+  right: 5vw;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 2vw;
+}
+
+.boxIcon > a {
+  cursor: pointer;
+}
+
+.boxIcon svg {
+  fill: var(--text);
+  transition: fill 0.2s;
+}
+
+.navLink:hover,
+.boxIcon > a:hover svg {
+  color: var(--primary);
+  fill: var(--primary);
+}
+
+.boxTitle {
+  display: flex;
+  align-items: center;
+  padding-top: max(10vw, 150px);
+  flex-direction: column;
+  height: calc(100vh - 125px);
+  margin-inline: 30px;
+}
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 40px;
+}
+
+h1.title {
+  text-align: center;
+  font-size: var(--h1-size);
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.subtitle {
+  text-align: center;
+  max-width: 700px;
+  font-size: var(--text-m-size);
+}
+
+.btnCollection {
+  text-decoration: none;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  padding: 10px 15px;
+  font-size: var(--text-m-size);
+  position: relative;
+  z-index: 3;
+  transition: color 0.3s ease-in-out;
+}
+
+.btnCollection::after {
+  position: absolute;
+  content: "";
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background-color: var(--primary);
+  z-index: -1;
+  transition: height 0.3s ease-in-out;
+}
+
+.btnCollection:hover::after {
+  height: 100%;
+}
+
+.btnCollection:hover {
+  color: var(--text2);
+}
+
+main {
+  padding-bottom: 200px;
+}
+
+.aboutBox {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10vw;
+  padding-inline: var(--padding-inline2);
+  /* margin-bottom: 100px; */
+}
+
+.aboutContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 50px;
+  flex-wrap: wrap-reverse;
+}
+
+.aboutContainer__imgBox > .imgContainer {
+  width: calc(200px + 7vw);
+  height: calc(200px + 7vw);
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: 0 0 30px 5px rgba(101, 172, 238, 0.3);
+}
+
+.aboutContainer__imgBox > .imgContainer > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.aboutContainer__textBox > h2,
+.faqContainer__textBox > h2 {
+  font-weight: 600;
+  font-size: var(--h2-size);
+  margin-bottom: 20px;
+}
+
+.aboutContainer__textBox > p {
+  max-width: 600px;
+  font-size: var(--text-m-size);
+}
+
+.faqBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 100px;
+}
+
+.faqContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 70%;
+  max-width: 900px;
+}
+
+.faqContainer__textBox {
+  text-align: center;
+  margin-bottom: 75px;
+  max-width: 600px;
+  font-size: var(--text-m-size);
+}
+
+.faqObject p,
+.faqObject span {
+  font-size: var(--text-p-size);
+}
+.faqContainer__objectsBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.faqObject {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: space-between; */
+  /* gap: max(20px); */
+  width: 100%;
+  /* padding: 20px 30px; */
+  background-color: var(--bg1);
+}
+
+.faqObject:has(.answer.hidden) {
+  gap: 0;
+}
+
+.faqContainer__objectsBox .question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: max(20px);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 20px 30px;
+}
+
+.question svg {
+  fill: var(--text);
+  transition: rotate 0.2s;
+}
+
+.question:hover svg {
+  /* transform: rotate(45deg); */
+  fill: var(--primary) !important;
+}
+
+.faqObject:has(.answer:not(.answer.hidden)) svg {
+  rotate: 45deg;
+}
+
+.answer {
+  opacity: 1;
+  padding-inline: 30px;
+  padding-bottom: 20px;
+  transition: opacity 0.3s, height 1s, visibility, 0.3s;
+  overflow: hidden;
+}
+
+.answer.hidden {
+  visibility: hidden;
+  height: 0;
+  opacity: 0;
+  padding: 0;
+}
+
+.moreQuestionsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.moreQuestionsContainer > h3 {
+  margin-bottom: 30px;
+  font-size: var(--h3-size);
+}
+
+.moreQuestionsContainer > .contactBox {
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  font-size: var(--text-p-size);
+}
+
+.contactBox__emailContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* width: 300px; */
+  gap: 30px;
+  background-color: var(--bg1);
+  padding: 15px 20px;
+  border-radius: 10px;
+}
+
+.contactBox__emailContainer > p {
+  padding: 5px;
+  background-color: #383b4d;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.contactBox__emailContainer > p:hover {
+  background-color: #575b6e;
+}
+
+.contactBox__emailContainer > p > span {
+  margin-right: 7px;
+}
+
+.fake {
+  font-size: 14px;
+  color: grey;
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: var(--padding-inline);
+  height: 200px;
+  border-top: 4px solid var(--bg1);
+  gap: max(30px);
+}
+
+.footerNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(5px + 2vw);
+  flex-wrap: wrap;
+}
+
+#burgerIcon {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 60px;
+  right: var(--padding-inline);
+  width: 25px;
+  height: 25px;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  fill: var(--text);
+  cursor: pointer;
+}
+
+html:has(.mobileNav.open) {
+  overflow: hidden;
+}
+
+.mobileNav {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 300px;
+  height: 100lvh;
+  background: rgba(22, 25, 39, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 9;
+  transition: right 0.3s;
+}
+
+.mobileNav.open {
+  right: 0;
+}
+
+.navBox2 {
+  height: 100%;
+  padding-inline: 50px;
+}
+
+.navBox2 {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.navBox2 li {
+  list-style-type: none;
+}
+
+.navBox2 a {
+  font-size: 2rem;
+  text-align: end;
+}
+
+@media (max-width: 1350px) {
+  .aboutContainer {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 750px) {
+  header .navBox {
+    display: none;
+  }
+
+  #burgerIcon {
+    opacity: 1;
+    visibility: visible;
+  }
+}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/dashboard.css">
+  <script>
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      window.location.href = '/login';
+    }
+  </script>
+  <script src="https://kit.fontawesome.com/d3a9f97c9c.js" crossorigin="anonymous"></script>
+  <script src="./js/theme.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  <div class="wrapper">
+  
+    <nav class="sidebar">
+      <div class="closeBtnBox">
+          <span class="closeSidebarBtn"><i class="fa-solid fa-xmark"></i></span>
+      </div>
+      <div class="navBox">
+        <div class="navContainer">
+          <span class="infos-menu">Dashboard</span>
+          <ul>
+            <li><a href="/dashboard" data-active="true">Dashboard</a></li>
+            <li><a href="" data-active="false">Your cards</a></li>
+            <li><a href="" data-active="false">Help</a></li>
+            <li><a href="" data-active="false">Settings</a></li>
+          </ul>
+        </div>
+        <div class="navContainer menu">
+          <span class="infos-menu">Menu</span>
+          <ul>
+            <li><a href="/" data-active="false">Home</a></li>
+            <li><a href="/collection" data-active="false">Collection</a></li>
+            <li><a href="/#faq" data-active="false">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div class="deployNav">
+          <i class="fa-solid fa-angles-right"></i>
+        </div>
+      </div>
+
+      <div class="sidebar__profileBox">
+        <p id="nameData"></p>
+        <p id="emailData"></p>
+      </div>
+
+      
+    </nav>
+
+    <div class="pageContent">
+      <header class="headerBar">
+        <div class="headerInformationsBox">
+          <span class="dateInfos" id="dateData"></span>
+          <span class="welcomingInfos">What's up today ?</span>
+        </div>
+        <div class="headerActionsBox">
+          <div class="toggleMode">
+            <div class="toggleMode__circle"></div>
+          </div>
+          <div class="notificationsBox">
+            <i class="fa-regular fa-bell"></i>
+          </div>
+          <button class="profileBox" id="profileBox" popovertarget="profilMenu">
+            <div class="profileImgBox">
+              <img src="./ressources/images/Harry-Potter.jpg" alt="profile image">
+            </div>
+            <span class="profileIcon">
+              <i class="fa-solid fa-chevron-down"></i>
+            </span>
+          </button>
+
+          <div class="profilMenu" anchor="profileBox" id="profilMenu" popover>
+            <form>
+              <button type="submit" id="logoutBtn">Logout</button>
+            </form>
+          </div>
+          
+      </header>
+      <main>
+        <div class="profileDashboardBox accountStatsBox">
+          <div class="profileDashboardContainer accountStatsContainer">
+            <h2>Account Stats</h2>
+            <div class="statBox">
+              <div class="statItem cards">
+                <span class="statItem__number" id="cardNumberData"></span>
+                <span class="statItem__name">Cards</span>
+              </div>
+              <div class="statItem">
+                <span class="statItem__number" id="houseNumberData"></span>
+                <span class="statItem__name">Houses</span>
+              </div>
+              <div class="statItem">
+                <span class="statItem__number">0</span>
+                <span class="statItem__name">Friends</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="profileDashboardBox">
+          <div class="profileDashboardContainer">
+            <h2>Booster available in </h2>
+            <span class="timerBooster">16h 01m 36s</span>
+          </div>
+        </div>
+      </main>
+
+      <div class="popupBtn">
+        <i class="fa-regular fa-comments"></i>
+      </div>
+      
+      <div class="popupBox">
+        <div class="popupContainer">
+          <h3>Trade cards with your friends</h3>
+          <form action="" class="tradeForm">
+            <div class="tradeForm__inputBox">
+              <label for="cardName">Card name</label>
+              <input type="text" id="cardName" name="cardName">
+            </div>
+            <div class="tradeForm__inputBox">
+              <label for="friendName">Friend name</label>
+              <input type="text" id="friendName" name="friendName">
+            </div>
+            <button type="submit" class="tradeFormBtn">Send</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+
+  <script src="./js/dashboard.js"></script>
+</body>
+</html>
