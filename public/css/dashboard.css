@@ -1,9 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap");
 
 :root {
-  --primary: #d7b972;
-  --secondary: #535AFF;
-  --secondary-hover: #434aff;
   --h1-size: calc(30px + 4vw);
   --h2-size: calc(20px + 2vw);
   --h3-size: calc(16px + 1vw);
@@ -13,51 +10,38 @@
   --text-infos-size: calc(10px + 0.5vw);
   --padding-inline: 5vw;
   --padding-inline2: 15vw;
-  --light-text: #130f1c;
-  --light-text2: #f5f5f5;
-  --light-text3: #7b7b7b;
-  --light-bg: #f9f9fa;
-  --light-bg1: #ffffff;
-  --light-bg2: #f1f1f1;
-  --light-popup-bg: rgba(213, 216, 225, 0.9);
-  --light-infos-box-bg: #a2c1ff;
-  --light-filter: #161927bd;
-  --dark-text: #f5f5f5;
-  --dark-text2: #130f1c;
-  --dark-text3: #979797;
-  --dark-bg: #161927;
-  --dark-bg1: #212433;
-  --dark-bg2: #383b4d;
-  --dark-popup-bg: rgba(33, 36, 51, 0.9);
-  --dark-infos-box-bg: #b4cdff;
-  --dark-filter: #161927bd;
-  --danger-color: rgb(255, 94, 94);
-  --green: #01c101;
+  --border-style: 1px solid var(--blue-800);
   
 }
 
-:root[data-theme="light"] {
-  --text: var(--light-text);
-  --text2: var(--light-text2);
-  --text3: var(--light-text3);
-  --bg: var(--light-bg);
-  --bg1: var(--light-bg1);
-  --bg2: var(--light-bg2);
-  --popup-bg: var(--light-popup-bg);
-  --infos-box-bg: var(--light-infos-box-bg);
-  --filter: var(--light-filter);
+:root[data-theme="dark"] {
+  --bordure-objet: var(--bordure-objet-dark);
+  --bordure-section: var(--bordure-section-dark);
+  --fond-block-infos: var(--fond-block-infos-dark);
+  --fond-hovered: var(--fond-hovered-dark);
+  --fond-hovered-menu: var(--fond-hovered-menu-dark);
+  --fond-primaire: var(--fond-primaire-dark);
+  --texte-primaire: var(--texte-primaire-dark);
+  --texte-reversed: var(--texte-reversed-dark);
+  --texte-sous-texte: var(--texte-sous-texte-dark);
+  --texte-sous-texte-2: var(--texte-sous-texte-2-dark);
+  --dark-filter: var(--filter);
+  --transparent-section: var(--transparent-section-dark);
 }
 
-:root[data-theme="dark"] {
-  --text: var(--dark-text);
-  --text2: var(--dark-text2);
-  --text3: var(--dark-text3);
-  --bg: var(--dark-bg);
-  --bg1: var(--dark-bg1);
-  --bg2: var(--dark-bg2);
-  --popup-bg: var(--dark-popup-bg);
-  --infos-box-bg: var(--dark-infos-box-bg);
-  --filter: var(--dark-filter);
+:root[data-theme="light"] {
+  --bordure-objet: var(--bordure-objet-light);
+  --bordure-section: var(--bordure-section-light);
+  --fond-block-infos: var(--fond-block-infos-light);
+  --fond-hovered: var(--fond-hovered-light);
+  --fond-hovered-menu: var(--fond-hovered-menu-light);
+  --fond-primaire: var(--fond-primaire-light);
+  --texte-primaire: var(--texte-primaire-light);
+  --texte-reversed: var(--texte-reversed-light);
+  --texte-sous-texte: var(--texte-sous-texte-light);
+  --texte-sous-texte-2: var(--texte-sous-texte-2-light);
+  --light-filter: var(--filter);
+  --transparent-section: var(--transparent-section-light);
 }
 
 * {
@@ -69,6 +53,7 @@
 html, .wrapper {
   overflow: hidden;
   font-family: 'Outfit', sans-serif;
+  background-color: var(--fond-primaire);
 }
 
 .wrapper {
@@ -82,9 +67,10 @@ nav.sidebar {
   --sidebar-width: 290px;
   height: 100%;
   width: var(--sidebar-width);
-  background-color: var(--bg1);
-  color: var(--text);
+  color: var(--texte-sous-texte);
   padding-left: 30px;
+  border-right: 3px solid var(--bordure-section);
+  background-color: var(--fond-primaire);
 }
 
 .sidebar > .closeBtnBox {
@@ -92,7 +78,7 @@ nav.sidebar {
   align-items: center;
   justify-content: flex-start;
   height: 80px;
-  color: var(--text);
+  color: var(--texte-primaire);
   font-size: 25px;
 }
 
@@ -107,19 +93,19 @@ nav.sidebar {
 }
 
 .sidebar > .closeBtnBox > span:hover {
-  background-color: var(--bg2);
+  background-color: var(--fond-hovered);
 }
 
 .infos-menu {
   margin: 0 0 10px 10px;
   text-transform: uppercase;
   font-size: var(--text-mp-size);
-  color: var(--text3);
+  color: var(--texte-sous-texte-2);
 }
 
 .navBox {
   /* position: relative; */
-  height: 85%;
+  height: 80%;
 }
 
 #nameData {
@@ -152,7 +138,7 @@ nav.sidebar {
 .navContainer a {
   display: inline-block;
   font-size: var(--text-p-size);
-  color: var(--text);
+  color: var(--texte-sous-texte);
   text-decoration: none;
   padding: 10px 0 10px 10px;
   width: 100%;
@@ -160,11 +146,11 @@ nav.sidebar {
 }
 
 .navContainer a[data-active="true"] {
-  background-color: var(--bg2);
+  background-color: var(--fond-hovered-menu);
 }
 
 .navContainer a:hover {
-  background-color: var(--bg2);
+  background-color: var(--fond-hovered-menu);
 }
 
 .pageContent {
@@ -175,10 +161,10 @@ nav.sidebar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--bg1);
   width: 100%;
   height: 80px;
   padding-inline: 20px var(--padding-inline);
+  border-bottom: 3px solid var(--bordure-section);
 }
 
 
@@ -190,20 +176,20 @@ nav.sidebar {
 }
 
 .dateInfos {
-  color: var(--text3);
+  color: var(--texte-sous-texte-2);
   font-size: calc(var(--text-infos-size) + 2px);
 }
 
 .welcomingInfos {
   font-size: var(--text-infos-size);
-  color: var(--text);
+  color: var(--texte-primaire);
 }
 
 .headerActionsBox {
   display: flex;
   align-items: center;
   gap: 2vw;
-  color: var(--text);
+  /* color: var(--text); */
 }
 
 .notificationsBox {
@@ -213,8 +199,15 @@ nav.sidebar {
   width: 40px;
   height: 40px;
   border-radius: 100vw;
-  background-color: var(--bg2);
+  border: 1px solid var(--bordure-objet);
+  background-color: var(--fond-block-infos);
+  color: var(--texte-sous-texte);
   cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.notificationsBox:hover {
+  background-color: var(--fond-hovered);
 }
 
 .profileBox {
@@ -226,11 +219,11 @@ nav.sidebar {
   border-radius: 5px;
   background: none;
   border: none;
-  color: var(--text);
+  color: var(--texte-primaire);
 }
 
 .profileBox:hover {
-  background-color: var(--bg2);
+  background-color: var(--fond-hovered);
 }
 
 .profileImgBox {
@@ -253,7 +246,7 @@ nav.sidebar {
   left: anchor(center);
   translate: -50%;
   margin-top: 20px;
-  background-color: var(--bg1);
+  background-color: var(--fond-block-infos);
   border: none;
   width: 150px;
   border-radius: 5px;
@@ -264,8 +257,8 @@ nav.sidebar {
   width: 100%;
   padding: 10px 0;
   text-align: center;
-  color: var(--text);
-  background-color: var(--bg2);
+  color: var(--texte-reversed);
+  background-color: var(--fond-block-infos);
   border: none;
   cursor: pointer;
   font-size: var(--text-p-size);
@@ -279,7 +272,6 @@ nav.sidebar {
 
 
 main {
-  background-color: var(--bg);
   width: 100%;
   height: 100%;
   padding-top: 80px;
@@ -291,7 +283,7 @@ main > * + * {
 
 main h2 {
   font-size: var(--h2-size);
-  color: var(--text);
+  color: var(--texte-primaire);
   margin-bottom: 20px;
 }
 
@@ -315,10 +307,12 @@ main h2 {
   gap: 10px;
   flex: 1;
   height: clamp(100px, 20vw, 200px);
-  background-color: var(--infos-box-bg);
+  background-color: var(--fond-block-infos);
+  border: 1px solid var(--bordure-objet);
   border-radius: 10px;
   font-weight: 600;
   padding: 10px;
+  color: var(--texte-sous-texte);
 
 }
 
@@ -336,7 +330,7 @@ main h2 {
 
 .timerBooster {
   font-size: calc(var(--h2-size) + 4px);
-  color: var(--text3);
+  color: var(--texte-sous-texte-2);
 }
 
 .navContainer.menu {
@@ -354,9 +348,15 @@ main h2 {
   height: 50px;
   width: 50px;
   border-radius: 50%; 
-  background-color: var(--bg2);
+  background-color: var(--fond-block-infos);
+  border: 1px solid var(--bordure-objet);
   cursor: pointer;
-  color: var(--text);
+  color: var(--texte-primaire);
+  transition: background-color 0.3s;
+}
+
+.popupBtn:hover {
+  background-color: var(--fond-hovered);
 }
 
 .popupBox {
@@ -373,12 +373,12 @@ main h2 {
   visibility: hidden;
   align-items: center;
   justify-content: center;
-  color: var(--text);
-  background-color: var(--popup-bg);
+  color: var(--texte-primaire);
+  background-color: var(--transparent-section);
   backdrop-filter: blur( 4px );
   -webkit-backdrop-filter: blur( 3px );
   border-radius: 10px;
-  border: 1px solid var(--bg2);
+  border: 1px solid var(--bordure-objet);
   transition: opacity .3s ease-in-out, transform .3s ease-in-out, visibility .3s ease-in-out;
 }
 
@@ -430,7 +430,7 @@ main h2 {
   background-color: var(--secondary);
   border: none;
   border-radius: 5px;
-  color: var(--text2);
+  color: var(--blue-50);
   font-size: var(--text-m-size);
   cursor: pointer;
   transition: background-color 0.3s;
@@ -443,7 +443,8 @@ main h2 {
 .toggleMode {
   height: 40px;
   width: 90px;
-  background-color: var(--bg2);
+  background-color: var(--fond-block-infos);
+  border: 1px solid var(--bordure-objet);
   border-radius: 100vw;
   position: relative;
   cursor: pointer;
@@ -472,6 +473,142 @@ main h2 {
   display: none;
 }
 
+#openBoosterBtn {
+  font-size: var(--text-m-size);
+  color: var(--blue-50);
+  padding: 7px 14px;
+  background-color: var(--secondary);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#openBoosterBtn:hover {
+  background-color: var(--secondary-hover);
+}
+
+.boosterWindow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 30px;
+  background-color: var(--fond-primaire);
+  border: 1px solid var(--bordure-objet);
+  text-align: center ;
+  padding-block: 50px;
+}
+
+.boosterWindow__title {
+  font-size: var(--h3-size);
+  color: var(--texte-primaire);
+}
+
+.boosterWindow__cardsBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* flex-wrap: wrap; */
+  gap: 15px;
+  padding-inline: 50px;
+}
+
+.boosterWindow__cardsBox__cardContainer {
+  position: relative;
+  width: 220px;
+  height: 350px;
+}
+
+.boosterWindow__cardsBox__card {
+  position: absolute;
+  border-radius: 10px;
+  background-color: var(--fond-block-infos);
+  border: 1px solid var(--bordure-objet);
+  max-width: 220px;
+  height: 100%;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
+  transform: perspective(1000px) rotateY(180deg);
+  cursor: pointer;
+}
+
+.boosterWindow__cardsBox__card.show {
+  transform: perspective(1000px) rotateY(0deg);
+  cursor: auto;
+} 
+
+.boosterWindow__cardsBox__cardFront,
+.boosterWindow__cardsBox__cardBack {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  backface-visibility: hidden;
+}
+
+.boosterWindow__cardsBox__cardFront {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 10px;
+}
+
+.boosterWindow__cardsBox__cardBack {
+  transform: rotateY(-180deg)
+}
+
+.boosterWindow__cardsBox__card__name {
+  font-size: var(--text-m-size);
+  color: var(--texte-sous-texte);
+  white-space: wrap;
+  overflow: hidden;         /* Hides the text that overflows the container */
+  text-overflow: ellipsis;  /* Adds the "..." at the end when the text overflows */
+  width: 100%;
+}
+
+.boosterWindow__cardsBox__card__imageBox {
+  width: 100%;
+  height: 90%;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+.boosterWindow__cardsBox__card__imageBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.boosterWindow__boxBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.boosterWindow__boxBtn__closeBtn {
+  font-size: var(--text-p-size);
+  font-weight: 500;
+  font-family: 'Outfit', sans-serif;
+  padding: 10px 30px;
+  background-color: var(--secondary);
+  border: none;
+  border-radius: 5px;
+  color: var(--blue-50);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.boosterWindow__boxBtn__closeBtn:hover {
+  background-color: var(--secondary-hover);
+}
 
 @media (max-width: 900px) {
   .sidebar {
@@ -498,10 +635,11 @@ main h2 {
     top: 50%;
     padding-inline: 10px;
     height: 40px;
-    background-color: var(--bg1);
+    background-color: var(--fond-primaire);
     transform: translate(-50%, 0);
     border-radius: 0 5px 5px 0; 
+    border: 1px solid var(--bordure-objet);
+    cursor: pointer;
   }
-
 
 }

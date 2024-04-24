@@ -30,6 +30,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       document.querySelector('.cardBox').appendChild(cardDetails);
 
+      const fetchLed = await fetch('/iot/lastVisited', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ lastVisited: cardData.house })
+      });
+
   } catch (error) {
     console.error(error);
   }

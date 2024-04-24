@@ -25,6 +25,7 @@ class AuthentificationController {
           name: user.name,
           email: user.email,
           createdAt: user.createdAt,
+          next_booster: user.booster,
           sentFriendRequests: user.sentFriendRequests,
           receivedFriendRequests: user.receivedFriendRequests
         }
@@ -35,7 +36,6 @@ class AuthentificationController {
     } catch(error) {
       return res.status(500).json({ message: "Internal server error"})
     }
-
   }
   
 }

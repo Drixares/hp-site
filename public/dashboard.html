@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/main.css">
   <link rel="stylesheet" href="./css/dashboard.css">
   <script>
     const token = localStorage.getItem('token');
@@ -16,7 +17,7 @@
   <title>Document</title>
 </head>
 <body>
-  <div class="wrapper">
+  <div class="wrapper" id="wrapper">
   
     <nav class="sidebar">
       <div class="closeBtnBox">
@@ -104,9 +105,9 @@
           </div>
         </div>
         <div class="profileDashboardBox">
-          <div class="profileDashboardContainer">
+          <div class="profileDashboardContainer profileDashboardBox__boosterBox">
             <h2>Booster available in </h2>
-            <span class="timerBooster">16h 01m 36s</span>
+            <span class="timerBooster"></span>
           </div>
         </div>
       </main>
@@ -134,6 +135,30 @@
 
     </div>
 
+    <!-- <div class="boosterWindow">
+      <h2 class="boosterWindow__title">Booster Opening !</h2>
+      <div class="boosterWindow__cardsBox">
+
+        <div class="boosterWindow__cardsBox__cardContainer">
+          <div class="boosterWindow__cardsBox__card">
+            <div class="boosterWindow__cardsBox__cardFront">
+              <div class="boosterWindow__cardsBox__card__imageBox">
+                <img src="./ressources/images/Harry-Potter.jpg" alt="card image">
+              </div>
+              <span class="boosterWindow__cardsBox__card__name">Harry Potter</span>
+            </div>
+            <div class="boosterwindow__cardsBox__cardBack"></div>
+
+          </div>
+        </div>
+        
+
+      </div>
+
+      <div class="boosterWindow__boxBtn">
+        <button class="boosterWindow__boxBtn__closeBtn">Close</button>
+      </div>
+    </div> -->
 
   </div>
 

@@ -40,7 +40,7 @@ class CardsController {
       return res.status(200).json({ message: 'Cards created' })
     
     } catch (error) {
-      return res.status(500).json({ message: 'Internal server error' })
+      return res.status(500).json({ message: error.message })
     }
   }
 
@@ -146,13 +146,25 @@ class CardsController {
         select: {
           cards: {
             select: {
-              card: true
+              quantity: true,
+              card: {
+                select: {
+                  id: true,
+                  name: true,
+                  house: true,
+                }
+              }
             }
           }
         }
       });
 
-      const numberCards = userWithCards.cards.length;
+      let numberCards = 0;
+
+      userWithCards.cards.forEach(card => {
+        numberCards += card.quantity;
+      })
+
       const houses = [];
 
       userWithCards.cards.forEach(card => {

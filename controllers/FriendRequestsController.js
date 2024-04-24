@@ -56,7 +56,7 @@ class FriendRequestsController {
 
       // Dans le cas où l'envoyeur a déjà envoyé une demande d'ami à la personne
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-        return res.status(400).json({ message: "Friend request already sent" });
+        return res.status(400).json({ message: "Friend request already used." });
       }
 
       return res.status(500).json({ message: error.message })

@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap");
+
+:root {
+  /* Mode 1 */
+  /* colors */
+  --black: #0e0e11;
+  --blue-50: #f5f6fa;
+  --blue-100: #eaecf4;
+  --blue-200: #d0d5e7;
+  --blue-300: #a6b1d3;
+  --blue-400: #7789b9;
+  --blue-500: #5569a2;
+  --blue-600: #425287;
+  --blue-700: #37436d;
+  --blue-800: #303a5c;
+  --blue-900: #1a1f2f;
+  --blue-950: #161927;
+  --filter: #161927bd;
+  --danger-color: #BF5454;
+  --green: #01c101;
+  --primary: #d7b972;
+  --secondary: #535AFF;
+  --secondary-hover: #434aff;
+
+  /* Dark */
+  /* colors */
+  --bordure-objet-dark: var(--blue-800);
+  --bordure-section-dark: var(--blue-900);
+  --fond-block-infos-dark: var(--blue-900);
+  --fond-hovered-dark: var(--blue-800);
+  --fond-hovered-menu-dark: var(--blue-900);
+  --fond-primaire-dark: var(--blue-950);
+  --texte-primaire-dark: var(--blue-50);
+  --texte-reversed-dark: var(--blue-50);
+  --texte-sous-texte-dark: var(--blue-100);
+  --texte-sous-texte-2-dark: var(--blue-200);
+  --transparent-section-dark: rgba(26, 31, 47, 0.9);
+
+  /* Light */
+  /* colors */
+  --bordure-objet-light: var(--blue-200);
+  --bordure-section-light: var(--blue-100);
+  --fond-block-infos-light: var(--blue-100);
+  --fond-hovered-light: var(--blue-200);
+  --fond-hovered-menu-light: var(--blue-100);
+  --fond-primaire-light: var(--blue-50);
+  --texte-primaire-light: var(--blue-900);
+  --texte-reversed-light: var(--blue-900);
+  --texte-sous-texte-light: var(--blue-900);
+  --texte-sous-texte-2-light: var(--blue-400);
+  --transparent-section-light: rgba(234, 236, 244, .9);
+}

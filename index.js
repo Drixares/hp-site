@@ -1,5 +1,8 @@
 import express from 'express';
+import ip from 'ip';
 import router from './routes/start.js';
+
+const ipAdress = ip.address();
 
 const app = express();
 app.use(express.json());
