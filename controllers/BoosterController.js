@@ -34,7 +34,7 @@ class BoosterController {
       
       const userEmail = req.user.data.email;
       // const nextBooster = Date.now() + 1000 * 60 * 60 * 24
-      const nextBooster = Date.now() + 1000 * 10
+      const nextBooster = Date.now() + 1000 * 3
       console.log(nextBooster);
       
       const lastBooster = await prisma.user.update({
@@ -139,6 +139,7 @@ class BoosterController {
             name: true,
             actor: true,
             image: true,
+            house: true,
           }
         });
 

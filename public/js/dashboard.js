@@ -1,14 +1,10 @@
 const popupBtn = document.querySelector('.popupBtn');
-const popupBox = document.querySelector('.popupBox');
 const toggleMode = document.querySelector('.toggleMode');
 const deployNav = document.querySelector('.deployNav');
 const logoutBtn = document.getElementById('logoutBtn');
-const nameData = document.getElementById('nameData');
-const emailData = document.getElementById('emailData');
 const dateData = document.getElementById('dateData');
 let timerData = document.querySelector('.timerBooster');
 const cardNumberData = document.getElementById('cardNumberData');
-const houseNumberData = document.getElementById('houseNumberData');
 const boosterContainer = document.querySelector('.profileDashboardBox__boosterBox');
 
 
@@ -45,32 +41,7 @@ document.addEventListener('click', async (e) => {
 
             // ---------------- Create a new window for the booster opening ----------------- //
 
-            const window = document.createElement('div');
-            window.classList.add('boosterWindow');
-
-            const windowTitle = document.createElement('h2');
-            windowTitle.classList.add('boosterWindow__title');
-            windowTitle.innerText = 'Booster Opening !';
-
-            const windowCardsBox = document.createElement('div');
-            windowCardsBox.classList.add('boosterWindow__cardsBox');
-
-            for (let i = 0; i < 5; i++) {
-                windowCardsBox.appendChild(createNewCard(data.cards[i]));
-            }
-
-            const windowCloseBtnBox = document.createElement('div');
-            windowCloseBtnBox.innerHTML = `<button class="boosterWindow__boxBtn__closeBtn">Close</button>`;
-            windowCloseBtnBox.classList.add('boosterWindow__boxBtn');
-            windowCloseBtnBox.addEventListener('click', () => {
-                window.remove();
-            })
-
-            window.appendChild(windowTitle);
-            window.appendChild(windowCardsBox);
-            window.appendChild(windowCloseBtnBox);
-
-            document.getElementById('wrapper').appendChild(window);
+            openBoosterWindow(data);
 
             // ------------------------------------------------------------------------------ //
             
@@ -93,7 +64,7 @@ document.addEventListener('click', async (e) => {
 
 
 popupBtn.addEventListener('click', () => {
-    popupBox.classList.toggle('active');
+    document.querySelector('.popupBox').classList.toggle('active');
 });
 
 toggleMode.addEventListener('click', () => {
@@ -183,10 +154,10 @@ function updateTimer(timerMs, afterOpen = false) {
 }
 
 function updateProfile(userData, cardsData) {
-    nameData.innerText = userData.user.name;
-    emailData.innerText = userData.user.email;
-    cardNumberData.innerText = cardsData.numberCards;
-    houseNumberData.innerText = cardsData.numberHouses;
+    document.getElementById('nameData').innerText = userData.user.name;
+    document.getElementById('emailData').innerText = userData.user.email;
+    document.getElementById('cardNumberData').innerText = cardsData.numberCards;
+    document.getElementById('houseNumberData').innerText = cardsData.numberHouses;
 
     let timerMs = userData.user.next_booster - Date.now();
     
@@ -212,12 +183,67 @@ function getBoosterBtn() {
     return;
 }
 
-function openBoosterWindow() {
+function openBoosterWindow(data) {
     const window = document.createElement('div');
     window.classList.add('boosterWindow');
 
+    const windowTitle = document.createElement('h2');
+    windowTitle.classList.add('boosterWindow__title');
+    windowTitle.innerText = 'Booster Opening !';
+
+    const windowCardsBox = document.createElement('div');
+    windowCardsBox.classList.add('boosterWindow__cardsBox');
+
+    for (let i = 0; i < 5; i++) {
+        windowCardsBox.appendChild(createNewCard(data.cards[i], i));
+    }
+
+    const windowCloseBtnBox = document.createElement('div');
+    windowCloseBtnBox.classList.add('boosterWindow__boxBtn');
+    const windowCloseBtn = document.createElement('button');
+    windowCloseBtn.innerText = 'Close';
+    windowCloseBtn.classList.add('boosterWindow__boxBtn__closeBtn');
+    windowCloseBtnBox.appendChild(windowCloseBtn);
+
+    windowCloseBtn.addEventListener('click', () => {
+        window.remove();
+    })
+
+    window.appendChild(windowTitle);
+    window.appendChild(windowCardsBox);
+    window.appendChild(windowCloseBtnBox);
+
+    document.getElementById('wrapper').appendChild(window);
+
 }
 
+function createNewCard(cardData, i) {
+    const cardContainer = document.createElement('div');
+    cardContainer.classList.add('boosterWindow__cardsBox__cardContainer');
+    cardContainer.style.setProperty('--delay', i);
+    const card = document.createElement('div');
+    card.classList.add('boosterWindow__cardsBox__card');
+
+    
+    card.innerHTML = `
+    <div class="boosterWindow__cardsBox__cardFront">
+    <div class="boosterWindow__cardsBox__card__imageBox">
+    <img src="${cardData.image}" alt="card image" draggable="false" oncontextmenu="return false">
+    </div>
+    <span class="boosterWindow__cardsBox__card__name">${cardData.name}</span>
+    </div>
+    <div class="boosterwindow__cardsBox__cardBack">
+        <img src="./ressources/images/card_${cardData.house}.png" alt="card image" draggable="false" oncontextmenu="return false">
+    </div>
+    `
+    
+    card.addEventListener('click', () => {
+        card.classList.add('show');
+    })
+    cardContainer.appendChild(card);
+    
+    return cardContainer;
+}
 
 // Fetch data from the server and update the profile at the loading of the page
 (async () => {
@@ -225,28 +251,3 @@ function openBoosterWindow() {
     console.log(fetched);
     updateProfile(fetched.userData, fetched.cardsData);
 })();
-
-
-function createNewCard(cardData) {
-    const cardContainer = document.createElement('div');
-    cardContainer.classList.add('boosterWindow__cardsBox__cardContainer');
-    const card = document.createElement('div');
-    card.classList.add('boosterWindow__cardsBox__card');
-
-    card.innerHTML = `
-        <div class="boosterWindow__cardsBox__cardFront">
-            <div class="boosterWindow__cardsBox__card__imageBox">
-            <img src="${cardData.image}" alt="card image">
-            </div>
-            <span class="boosterWindow__cardsBox__card__name">${cardData.name}</span>
-        </div>
-        <div class="boosterwindow__cardsBox__cardBack"></div>
-    `
-
-    card.addEventListener('click', () => {
-        card.classList.add('show');
-    })
-    cardContainer.appendChild(card);
-
-    return cardContainer;
-}
