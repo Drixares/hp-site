@@ -112,7 +112,7 @@ document.addEventListener('click', async (e) => {
 
 })
 
-searchFriendInput.addEventListener('input', debounce(getUsersData, 500))
+searchFriendInput.addEventListener('input', debounce(getSearchResults, 500))
 
 function debounce(callback, delay) {
     let timeout;
@@ -124,7 +124,7 @@ function debounce(callback, delay) {
     }
 }
 
-async function getUsersData() {
+async function getSearchResults() {
     
     try {
         // Get the value of the input
@@ -288,6 +288,11 @@ function updateProfile(userData, cardsData) {
     document.getElementById('emailData').innerText = userData.user.email;
     document.getElementById('cardNumberData').innerText = cardsData.numberCards;
     document.getElementById('houseNumberData').innerText = cardsData.numberHouses + ' / 4';
+    // document.getElementById('friendNumberData').innerText = userData.user.friends.length;
+    const friendNumber = userData.user.sentFriendRequests.filter(request => request.status === 'ACCEPTED').length 
+                        + userData.user.receivedFriendRequests.filter(request => request.status === 'ACCEPTED').length;
+                
+    document.getElementById('friendNumberData').innerText = friendNumber;
 
     let timerMs = userData.user.next_booster - Date.now();
     
