@@ -6,7 +6,10 @@ const dateData = document.getElementById('dateData');
 let timerData = document.querySelector('.timerBooster');
 const cardNumberData = document.getElementById('cardNumberData');
 const boosterContainer = document.querySelector('.profileDashboardBox__boosterBox');
-
+const notifBtn = document.querySelector('.notificationsBtn')
+const openFriendSearch = document.getElementById('openFriendSearch');
+const filter = document.querySelector('.filter');
+const searchFriendInput = document.getElementById('searchFriend');
 
 const date = new Date();
 const options = { weekday: 'long', month: 'long', day: 'numeric' };
@@ -17,6 +20,8 @@ dateData.innerText = dateString;
 
 document.addEventListener('click', async (e) => {
     const btn = e.target.closest('#openBoosterBtn');
+    const btnCancel = e.target.closest('.cancelBtn');
+    const btnAccept = e.target.closest('.acceptBtn');
     
     if (btn) {
         
@@ -58,10 +63,135 @@ document.addEventListener('click', async (e) => {
         } catch (error) {    
             alert(error.message);
         }
-          
+    } else if (btnCancel) {
+
+        try {
+
+            const response = await fetch('/users/friendRequests/cancel/' + btnCancel.dataset.request, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${token}`
+                }
+            })
+
+            if (response.status === 200) {
+                document.querySelector(`[data-request="${btnCancel.dataset.request}"]`).remove();
+            } else {
+                alert('An error occured');
+            }
+
+        } catch (error) {
+            alert(error.message);
+        }
+    } else if (btnAccept) {
+
+        try {
+            
+            const response = await fetch('/users/friendRequests/accept/' + btnAccept.dataset.request, {
+                method: 'PUT',
+                headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': `Bearer ${token}`
+                    }
+                })
+                        
+            if (response.status === 200) {
+                let text = document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElemennt__infosBox__text[data-request="${btnAccept.dataset.request}"]`);
+                text.innerText = `Vous avez accepté la demande d'ami de ${text.dataset.name} !`;        
+                btnAccept.parentNode.remove();
+            } else {
+                alert('An error occured');
+            }
+
+        } catch (error) {
+            alert(error.message)
+        }
     }
+    
+
 })
 
+searchFriendInput.addEventListener('input', debounce(getUsersData, 500))
+
+function debounce(callback, delay) {
+    let timeout;
+    return function() {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            callback()
+        }, delay);
+    }
+}
+
+async function getUsersData() {
+    
+    try {
+        // Get the value of the input
+        const query = searchFriendInput.value;
+        
+        // Get the URL parameters
+        const url = new URL(window.location.href);
+        // Get the search query from the input
+        const params = new URLSearchParams(url.search);
+        // Update the URL parameters
+        params.set('searchq', query);        
+        // Update the URL with the new parameters
+        url.search = params.toString();
+        // Update the browser URL without reloading the page
+        window.history.replaceState({}, '', url.toString())
+
+        const searchFriendResult = document.getElementById('searchFriendResult');
+        if (!query) {
+            searchFriendResult.innerHTML = 'No results found';
+            return;
+        };
+        
+        const searchQuery = params.get('searchq');
+
+        const response = await fetch('/users/search', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                searchQuery
+            })
+        });
+    
+        const data = await response.json();
+        
+        if (data.message) {
+            searchFriendResult.innerHTML = data.message;
+            return;
+        }
+
+        searchFriendResult.innerHTML = '';
+
+        for (user of data) {
+            searchFriendResult.appendChild(createSearchResult(user));
+        }
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+
+}
+
+openFriendSearch.addEventListener('click', () => {
+    document.querySelector('.searchFriendBox').classList.toggle('active');
+    document.querySelector('.filter').classList.toggle('active');
+});
+
+filter.addEventListener('click', () => {
+    document.querySelector('.searchFriendBox').classList.remove('active');
+    document.querySelector('.filter').classList.remove('active');
+});
+
+notifBtn.addEventListener('click', () => {
+    document.querySelector('.sliderBox').classList.toggle('open');
+})
 
 popupBtn.addEventListener('click', () => {
     document.querySelector('.popupBox').classList.toggle('active');
@@ -96,7 +226,7 @@ async function fetchData() {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
-        }
+        },
     })
 
     if (response.status === 401 || response.status === 403) {
@@ -157,7 +287,7 @@ function updateProfile(userData, cardsData) {
     document.getElementById('nameData').innerText = userData.user.name;
     document.getElementById('emailData').innerText = userData.user.email;
     document.getElementById('cardNumberData').innerText = cardsData.numberCards;
-    document.getElementById('houseNumberData').innerText = cardsData.numberHouses;
+    document.getElementById('houseNumberData').innerText = cardsData.numberHouses + ' / 4';
 
     let timerMs = userData.user.next_booster - Date.now();
     
@@ -247,7 +377,35 @@ function createNewCard(cardData, i) {
 
 // Fetch data from the server and update the profile at the loading of the page
 (async () => {
-    const fetched = await fetchData();
-    console.log(fetched);
-    updateProfile(fetched.userData, fetched.cardsData);
+    const { userData, cardsData } = await fetchData();
+    updateProfile(userData, cardsData);
+    createNotifications(userData.user.receivedFriendRequests, userData.user.sentFriendRequests);
+    
 })();
+
+function createNotifications(receivedFriendRequests, sentFriendRequests) {
+
+    const notificationsList = document.getElementById('notifList');
+    const friendsList = document.getElementById('friendList');
+    
+    if (!receivedFriendRequests.length && !sentFriendRequests.length) {
+        notificationsList.innerHTML = "No notifications";
+        friendsList.innerHTML = "No friends";
+        return;
+    }
+
+    for (friendRequestSent of sentFriendRequests) {
+        notificationsList.appendChild(notificationTemplate(friendRequestSent, 'sent'));
+        if (friendRequestSent.status === 'ACCEPTED') {
+            friendsList.appendChild(friendTemplate(friendRequestSent, 'sent'));
+        }
+    }
+
+    for (friendRequestReceived of receivedFriendRequests) {
+        notificationsList.appendChild(notificationTemplate(friendRequestReceived, 'received'));
+        if (friendRequestReceived.status === 'ACCEPTED') {
+            friendsList.appendChild(friendTemplate(friendRequestReceived, 'received'));
+        }
+    }
+
+}

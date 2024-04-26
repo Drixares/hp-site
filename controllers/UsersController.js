@@ -75,6 +75,38 @@ class UsersController {
   async logout(req, res) {
     return res.status(200).json({ message: "User logged out successfully" });
   }
+
+  async searchUser(req, res) {
+    
+    try {
+
+      const searchq = req.body.searchQuery;
+
+      if (!searchq || !/\S/.test(searchq)) return res.json({ message: "Search query is required and should not be only spaces" });
+      console.log(searchq);
+
+      const users = await prisma.user.findMany({
+        take: 10,
+        where: {
+          name: {
+            contains: searchq
+          }
+        },
+        select: {
+          id: true,
+          name: true
+        }
+      });
+
+      if (!users || !users.length ) return res.status(404).json({ message: "No results found" });
+
+      return res.status(200).json(users)
+
+    } catch (err) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
 }
 
 export default new UsersController();

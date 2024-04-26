@@ -8,6 +8,9 @@ import { authentificationToken } from '../middlewares/Auth.js';
 
 const router = express.Router();
 
+// Recherche d'utilisateur
+router.post('/users/search', UsersController.searchUser)
+
 // Connexion, inscription, déconnexion et récupération de l'utilisateur
 router.post('/users/login', UsersController.login)
 router.post('/users/signup', UsersController.signup)

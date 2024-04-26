@@ -65,7 +65,7 @@
           <div class="toggleMode">
             <div class="toggleMode__circle"></div>
           </div>
-          <div class="notificationsBox">
+          <div class="notificationsBtn">
             <i class="fa-regular fa-bell"></i>
           </div>
           <button class="profileBox" id="profileBox" popovertarget="profilMenu">
@@ -110,6 +110,25 @@
             <span class="timerBooster"></span>
           </div>
         </div>
+        
+        <div class="sliderBox">
+          <div class="sliderBox__sliderContainer">
+            <div class="sliderBox__sliderContainer__notifBox">
+              <h3 class="sliderBox__sliderContainer__notifBox__title">Notifications</h3>
+              <div class="sliderBox__sliderContainer__notifBox__notifList" id="notifList"></div>
+            </div>
+
+            <div class="sliderBox__sliderContainer__friendBox">
+              <div class="sliderBox__sliderContainer__friendBox__top">
+                <h3 class="sliderBox__sliderContainer__friendBox__title">Friends</h3>
+                <i class="fa-solid fa-user-plus" id="openFriendSearch"></i>
+              </div>
+              <div class="sliderBox__sliderContainer__friendBox__friendList" id="friendList"></div>
+            </div>
+
+          </div>
+        </div>
+
       </main>
 
       <div class="popupBtn">
@@ -132,10 +151,33 @@
           </form>
         </div>
       </div>
+      <div class="searchFriendBox">
+        <div class="searchFriendContainer">
+          <input type="text" name="searchFriend" id="searchFriend" placeholder="Looking for a friend ?">
+          <div class="searchFriendContainer__resultsBox" id="searchFriendResult">
+
+            <div class="searchFriendContainer__resultsBox__resultElement">
+              <div class="searchFriendContainer__resultsBox__resultElement__infosBox">
+                <div class="searchFriendContainer__resultsBox__resultElement__infosBox__imgBox">
+                  <img src="./ressources/images/ace6549ae47649ed5ba46cc872320fba.jpg" alt="profile picture">
+                </div>
+                <span class="searchFriendContainer__resultsBox__resultElement__name">Idrane</span>
+              </div>
+              <div class="searchFriendContainer__resultsBox__resultElement__btnBox">
+                <button class="searchFriendContainer__resultsBox__resultElement__btnBox addBtn">Ask a friend</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="filter"></div>
 
     </div>
   </div>
 
   <script src="./js/dashboard.js"></script>
+  <script src="./js/templates.js"></script>
 </body>
 </html>

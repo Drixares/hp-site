@@ -12,8 +12,30 @@ class AuthentificationController {
           email: userEmail
         },
         include: {
-          sentFriendRequests: true,
-          receivedFriendRequests: true,
+          sentFriendRequests: {
+            select: {
+              id: true,
+              status: true,
+              sentAt: true,
+              receiver: {
+                select: {
+                  name: true,
+                }
+              }
+            }
+          },
+          receivedFriendRequests: {
+            select: {
+              id: true,
+              status: true,
+              sentAt: true,
+              sender: {
+                select: {
+                  name: true,
+                }
+              }
+            }
+          },
         }
       })
 
