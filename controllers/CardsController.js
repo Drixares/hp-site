@@ -125,7 +125,7 @@ class CardsController {
 
   }
 
-  async showCardFromUser(req, res) {
+  async showUserCards(req, res) {
 
     const user = req.user;
 

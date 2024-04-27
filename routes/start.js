@@ -9,7 +9,7 @@ import { authentificationToken } from '../middlewares/Auth.js';
 const router = express.Router();
 
 // Recherche d'utilisateur
-router.post('/users/search', UsersController.searchUser)
+router.post('/users/search', authentificationToken, UsersController.searchUser)
 
 // Connexion, inscription, déconnexion et récupération de l'utilisateur
 router.post('/users/login', UsersController.login)
@@ -23,7 +23,7 @@ router.get('/cards/:id', CardsController.show)
 router.post('/cards/create', CardsController.store)
 
 // Récupération des cartes d'un utilisateur, ajout d'une carte à un utilisateur, suppression d'une carte d'un utilisateur
-router.get('/users/cards/show', authentificationToken, CardsController.showCardFromUser)
+router.get('/users/cards/show', authentificationToken, CardsController.showUserCards)
 router.post('/users/cards/add/:cardId', authentificationToken, CardsController.addCardToUser)
 router.post('/users/cards/delete/:cardId', authentificationToken, CardsController.deleteCardFromUser)
 

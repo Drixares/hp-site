@@ -11,6 +11,8 @@ class FriendRequestsController {
       const { receiverId } = req.params;
       const userId = req.user.data.id;
 
+      if (userId === receiverId) return res.status(400).json({ message: 'You cannot ask yourself to be friend :/' })
+
 
       // Vérifier si une demande d'ami a déjà été envoyée par l'autre utilisateur.
       const existingFriendRequest = await prisma.friendRequest.findFirst({
@@ -188,26 +190,6 @@ class FriendRequestsController {
 
     }
   }
-
-  // async test(req, res) {
-
-  //   try {
-  //     const friendRequest = await prisma.friendRequest.findFirst({
-  //       orderBy: {
-  //         id: 'desc'
-  //       }
-  //     })
-
-  //     if (!friendRequest) return res.status(404).json({ message: "Friend request not found" });
-
-  //     return res.status(200).json(friendRequest);
-
-  //   } catch (error) {
-      
-  //     return res.status(500).json({ message: error.message });
-  //   }
-
-  // }
 
   async removeFriend(req, res) {
 

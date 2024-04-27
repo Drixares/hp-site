@@ -80,6 +80,7 @@ class UsersController {
     
     try {
 
+      const userId = req.user.data.id;
       const searchq = req.body.searchQuery;
 
       if (!searchq || !/\S/.test(searchq)) return res.json({ message: "Search query is required and should not be only spaces" });
@@ -89,11 +90,26 @@ class UsersController {
         where: {
           name: {
             contains: searchq
+          },
+          NOT: {
+            id: userId,
           }
         },
         select: {
           id: true,
-          name: true
+          name: true,
+          sentFriendRequests: {
+            where: {
+              receiverId: userId,
+              status: 'ACCEPTED'
+            },
+          },
+          receivedFriendRequests: {
+            where: {
+              senderId: userId,
+              status: 'ACCEPTED'
+            },
+          }
         }
       });
 
@@ -101,8 +117,8 @@ class UsersController {
 
       return res.status(200).json(users)
 
-    } catch (err) {
-      return res.status(500).json({ message: "Internal server error" });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
     }
   }
 

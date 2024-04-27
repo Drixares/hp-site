@@ -44,14 +44,13 @@ document.addEventListener('click', async (e) => {
             const timerMs = data.next_booster - Date.now();
             btn.remove();
 
-            cardNumberData.innerText = parseInt(cardNumberData.innerText) + 5;
-
             // ---------------- Create a new window for the booster opening ----------------- //
 
             openBoosterWindow(data);
 
-            // ------------------------------------------------------------------------------ //
+            // ---------------- Update les données des cartes sur la page --------------------- //
             
+            updateCardsData()
 
             // A mettre au moment au l'utilisateur ferme la fenêtre de booster
             updateTimer(timerMs, true);
@@ -103,8 +102,8 @@ document.addEventListener('click', async (e) => {
                 text.innerText = `Vous avez accepté la demande d'ami de ${text.dataset.name} !`;        
                 btnAccept.parentNode.remove();
                 
+                // Refresh the friends list
                 friendsArray = await fetchFriends();
-
                 createFriends(friendsArray)
 
             } else {
@@ -129,8 +128,10 @@ document.addEventListener('click', async (e) => {
             const data = await response.json()
 
             if (response.status === 200) {
+                // Refresh the friends list
                 friendsArray = await fetchFriends();
                 createFriends(friendsArray)
+
             } else {
                 alert('An error occured');
             }
@@ -307,7 +308,7 @@ async function fetchData() {
     
     const cardsData = await responseCards.json();
     
-    return { userData, cardsData}
+    return { userData, cardsData }
 
 }
 
@@ -361,6 +362,28 @@ function updateProfile(userData, cardsData) {
     } 
 
     loopTimer(timerMs);
+} 
+
+async function updateCardsData() {
+
+    try {
+        
+        const responseCards = await fetch('/users/cards/show', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        
+        const cardsData = await responseCards.json();
+
+        document.getElementById('cardNumberData').innerText = cardsData.numberCards;
+        document.getElementById('houseNumberData').innerText = cardsData.numberHouses + ' / 4';
+
+    } catch (error) {
+        alert(error.message)
+    }
 
 } 
 
@@ -471,9 +494,18 @@ async function fetchFriends() {
 
 // Fetch data from the server and update the profile at the loading of the page
 (async () => {
-    const { userData, cardsData } = await fetchData();
-    updateProfile(userData, cardsData);
-    createNotifications(userData.user.receivedFriendRequests, userData.user.sentFriendRequests);
-    let friendsArray = await fetchFriends();
-    createFriends(friendsArray)
+
+    try {
+        const { userData, cardsData } = await fetchData();
+        updateProfile(userData, cardsData);
+        createNotifications(userData.user.receivedFriendRequests, userData.user.sentFriendRequests);
+        let friendsArray = await fetchFriends();
+        createFriends(friendsArray)
+        
+    } catch (error) {
+        
+        alert('Internal server error.')
+
+    }
+
 })();
