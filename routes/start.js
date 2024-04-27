@@ -32,7 +32,9 @@ router.post('/users/friendRequests/send/:receiverId', authentificationToken, Fri
 router.put('/users/friendRequests/accept/:requestId', authentificationToken, FriendRequestsController.acceptFriendRequest)
 router.put('/users/friendRequests/decline/:requestId', authentificationToken, FriendRequestsController.declineFriendRequest)
 router.delete('/users/friendRequests/cancel/:requestId', authentificationToken, FriendRequestsController.cancelFriendRequest)
-router.get('/users/test', FriendRequestsController.test)
+router.delete('/users/friendRequests/remove/:requestId', authentificationToken, FriendRequestsController.removeFriend)
+// router.get('/users/test', FriendRequestsController.test)
+router.get('/users/friends', authentificationToken, FriendRequestsController.getFriends)
 
 // Récuperation du temps de booster, mise à jour du temps de booster, ouverture du booster
 router.get('/users/booster', authentificationToken, BoosterController.getTimer)

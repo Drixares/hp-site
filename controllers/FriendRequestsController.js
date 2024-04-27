@@ -3,6 +3,7 @@ import prisma from "../config/prisma.js";
 
 class FriendRequestsController {
 
+  // Send friend request
   async sendFriendRequest(req, res) {
 
     try {
@@ -63,6 +64,7 @@ class FriendRequestsController {
     }
   }
 
+  // Accept friend request
   async acceptFriendRequest(req, res) {
 
     try {
@@ -105,6 +107,7 @@ class FriendRequestsController {
     }
   }
 
+  // Decline friend request
   async declineFriendRequest(req, res) {
 
     try {
@@ -147,6 +150,7 @@ class FriendRequestsController {
     }
   }
 
+  // Cancel friend request
   async cancelFriendRequest(req, res) {
 
     try {
@@ -185,24 +189,118 @@ class FriendRequestsController {
     }
   }
 
-  async test(req, res) {
+  // async test(req, res) {
+
+  //   try {
+  //     const friendRequest = await prisma.friendRequest.findFirst({
+  //       orderBy: {
+  //         id: 'desc'
+  //       }
+  //     })
+
+  //     if (!friendRequest) return res.status(404).json({ message: "Friend request not found" });
+
+  //     return res.status(200).json(friendRequest);
+
+  //   } catch (error) {
+      
+  //     return res.status(500).json({ message: error.message });
+  //   }
+
+  // }
+
+  async removeFriend(req, res) {
 
     try {
-      const friendRequest = await prisma.friendRequest.findFirst({
-        orderBy: {
-          id: 'desc'
+      
+      const { requestId } = req.params;
+      const userId = req.user.data.id;
+
+      const link = await prisma.friendRequest.deleteMany({
+        where: {
+          OR: [
+          {
+            AND: [
+              { id: parseInt(requestId) },
+              { receiverId: userId },
+              { status: 'ACCEPTED' }
+            ]
+          },
+          {
+            AND: [
+              { id: parseInt(requestId) },
+              { senderId: userId },
+              { status: 'ACCEPTED' }
+            ]
+          }
+          ]
         }
-      })
+      });
 
-      if (!friendRequest) return res.status(404).json({ message: "Friend request not found" });
+      if (!link) return res.status(404).json({ message: 'Friend not found.' })
 
-      return res.status(200).json(friendRequest);
+      return res.status(200).json({ message: 'Friend successfully removed.' })
 
     } catch (error) {
       
       return res.status(500).json({ message: error.message });
     }
 
+  }
+
+  async getFriends(req, res) {
+
+    try {
+      
+      const userEmail = req.user.data.email;
+
+      const allFriends = await prisma.user.findMany({
+        where: {
+          email: userEmail,
+        },
+        select: {
+          receivedFriendRequests: {
+            where: {
+              status: 'ACCEPTED'
+            },
+            select: {
+              id: true,
+              respondedAt: true,
+              sender: {
+                select: {
+                  name: true
+                }
+              }
+            }
+          },
+          sentFriendRequests: {
+            where: {
+              status: 'ACCEPTED'
+            },
+            select: {
+              id: true,
+              respondedAt: true,
+              receiver: {
+                select: {
+                  name: true
+                }
+              }
+            }
+          }
+
+        }
+      })
+
+      if (!allFriends) return res.status(404).json({ message: 'No friends found.' })
+
+      const friends = allFriends[0].receivedFriendRequests.concat(allFriends[0].sentFriendRequests)
+
+      return res.status(200).json(friends)
+
+    } catch (error) {
+      
+      return res.status(500).json(error.message)
+    }
   }
   
 }

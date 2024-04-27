@@ -22,6 +22,8 @@ document.addEventListener('click', async (e) => {
     const btn = e.target.closest('#openBoosterBtn');
     const btnCancel = e.target.closest('.cancelBtn');
     const btnAccept = e.target.closest('.acceptBtn');
+    const btnRemove = e.target.closest('.removeBtn');
+    const btnDecline = e.target.closest('.refuseBtn')
     
     if (btn) {
         
@@ -97,9 +99,59 @@ document.addEventListener('click', async (e) => {
                 })
                         
             if (response.status === 200) {
-                let text = document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElemennt__infosBox__text[data-request="${btnAccept.dataset.request}"]`);
+                let text = document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text[data-request="${btnAccept.dataset.request}"]`);
                 text.innerText = `Vous avez accepté la demande d'ami de ${text.dataset.name} !`;        
                 btnAccept.parentNode.remove();
+                
+                friendsArray = await fetchFriends();
+
+                createFriends(friendsArray)
+
+            } else {
+                return alert('An error occured');
+            }
+
+        } catch (error) {
+            alert(error.message)
+        }
+
+    } else if (btnRemove) {
+
+        try {
+            const response = await fetch('/users/friendRequests/remove/' + btnRemove.dataset.friend, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${token}`
+                }
+            })
+
+            const data = await response.json()
+
+            if (response.status === 200) {
+                friendsArray = await fetchFriends();
+                createFriends(friendsArray)
+            } else {
+                alert('An error occured');
+            }
+
+        } catch (error) {
+            alert(error.message);
+        }
+    } else if (btnDecline) {
+
+        try {
+            
+            const response = await fetch('/users/friendRequests/decline/' + btnDecline.dataset.request, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${token}`
+                }
+            })
+
+            if (response.status === 200) {
+                document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement[data-request="${btnDecline.dataset.request}"]`).remove();
             } else {
                 alert('An error occured');
             }
@@ -107,6 +159,7 @@ document.addEventListener('click', async (e) => {
         } catch (error) {
             alert(error.message)
         }
+
     }
     
 
@@ -138,14 +191,19 @@ async function getSearchResults() {
         params.set('searchq', query);        
         // Update the URL with the new parameters
         url.search = params.toString();
-        // Update the browser URL without reloading the page
-        window.history.replaceState({}, '', url.toString())
-
+        
         const searchFriendResult = document.getElementById('searchFriendResult');
         if (!query) {
             searchFriendResult.innerHTML = 'No results found';
+            params.delete('searchq', "")
+            const newUrl = `${window.location.pathname}`;
+            console.log(newUrl);
+            window.history.replaceState({}, '', newUrl)
             return;
         };
+        
+        // Update the browser URL without reloading the page
+        window.history.replaceState({}, '', url.toString())
         
         const searchQuery = params.get('searchq');
 
@@ -352,65 +410,70 @@ function openBoosterWindow(data) {
 
 }
 
-function createNewCard(cardData, i) {
-    const cardContainer = document.createElement('div');
-    cardContainer.classList.add('boosterWindow__cardsBox__cardContainer');
-    cardContainer.style.setProperty('--delay', i);
-    const card = document.createElement('div');
-    card.classList.add('boosterWindow__cardsBox__card');
-
+function createNotifications(receivedFriendRequests, sentFriendRequests) {
+    const notificationsList = document.getElementById('notifList');
     
-    card.innerHTML = `
-    <div class="boosterWindow__cardsBox__cardFront">
-    <div class="boosterWindow__cardsBox__card__imageBox">
-    <img src="${cardData.image}" alt="card image" draggable="false" oncontextmenu="return false">
-    </div>
-    <span class="boosterWindow__cardsBox__card__name">${cardData.name}</span>
-    </div>
-    <div class="boosterwindow__cardsBox__cardBack">
-        <img src="./ressources/images/card_${cardData.house}.png" alt="card image" draggable="false" oncontextmenu="return false">
-    </div>
-    `
+    if (!receivedFriendRequests.length && !sentFriendRequests.length) {
+        notificationsList.innerHTML = "No notifications";
+        return;
+    }
     
-    card.addEventListener('click', () => {
-        card.classList.add('show');
-    })
-    cardContainer.appendChild(card);
+    for (friendRequestSent of sentFriendRequests) {
+        if (friendRequestSent.status === 'REJECTED') continue;
+        notificationsList.appendChild(notificationTemplate(friendRequestSent, 'sent'));
+        if (friendRequestSent.status === 'ACCEPTED') {
+            friendsList.appendChild(friendTemplate(friendRequestSent, 'sent'));
+        }
+    }
     
-    return cardContainer;
+    for (friendRequestReceived of receivedFriendRequests) {
+        if (friendRequestReceived.status === 'REJECTED') continue;
+        notificationsList.appendChild(notificationTemplate(friendRequestReceived, 'received'));
+    }
+    
 }
+
+function createFriends(friendsArray) {
+    const friendsList = document.getElementById('friendList');
+
+    if (!friendsArray.length) {
+        friendsList.innerHTML = "No friends";
+        return;
+    }
+
+    friendsList.innerHTML = "";
+
+    for (friendData of friendsArray) {
+        friendsList.appendChild(friendTemplate(friendData));
+    }
+}
+
+async function fetchFriends() {
+
+    try {
+        
+        const response = await fetch('/users/friends', {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json',
+                'authorization': `Bearer ${token}`
+            }
+        })
+
+        const data = await response.json()
+
+        return data;
+
+    } catch (error) {
+        alert(error.message)
+    }
+} 
 
 // Fetch data from the server and update the profile at the loading of the page
 (async () => {
     const { userData, cardsData } = await fetchData();
     updateProfile(userData, cardsData);
     createNotifications(userData.user.receivedFriendRequests, userData.user.sentFriendRequests);
-    
+    let friendsArray = await fetchFriends();
+    createFriends(friendsArray)
 })();
-
-function createNotifications(receivedFriendRequests, sentFriendRequests) {
-
-    const notificationsList = document.getElementById('notifList');
-    const friendsList = document.getElementById('friendList');
-    
-    if (!receivedFriendRequests.length && !sentFriendRequests.length) {
-        notificationsList.innerHTML = "No notifications";
-        friendsList.innerHTML = "No friends";
-        return;
-    }
-
-    for (friendRequestSent of sentFriendRequests) {
-        notificationsList.appendChild(notificationTemplate(friendRequestSent, 'sent'));
-        if (friendRequestSent.status === 'ACCEPTED') {
-            friendsList.appendChild(friendTemplate(friendRequestSent, 'sent'));
-        }
-    }
-
-    for (friendRequestReceived of receivedFriendRequests) {
-        notificationsList.appendChild(notificationTemplate(friendRequestReceived, 'received'));
-        if (friendRequestReceived.status === 'ACCEPTED') {
-            friendsList.appendChild(friendTemplate(friendRequestReceived, 'received'));
-        }
-    }
-
-}

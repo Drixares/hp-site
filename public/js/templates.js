@@ -9,11 +9,11 @@ function notificationTemplate(request, type) {
     notification.setAttribute('data-name', request.sender.name);
 
     notification.innerHTML = `
-      <div class="sliderBox__sliderContainer__notifBox__notifList__notifElemennt__infosBox" data-request="${request.id}">
-        <div class="sliderBox__sliderContainer__notifBox__notifList__notifElemennt__infosBox__imgBox">
+      <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
+        <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__imgBox">
           <img src="./ressources/images/ace6549ae47649ed5ba46cc872320fba.jpg" alt="profile picture">
         </div>
-        <p class="sliderBox__sliderContainer__notifBox__notifList__notifElemennt__infosBox__text" data-request="${request.id}" data-name="${request.sender.name}">${request.sender.name} vous a envoyé une demande d'ami !</p>
+        <p class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text" data-request="${request.id}" data-name="${request.sender.name}">${request.sender.name} vous a envoyé une demande d'ami !</p>
       </div>
       <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox">
         <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox acceptBtn" data-request="${request.id}">Accept</button>
@@ -22,11 +22,11 @@ function notificationTemplate(request, type) {
     `
   } else if (type === 'sent' && request.status === 'PENDING') {
     notification.innerHTML = `
-      <div class="sliderBox__sliderContainer__notifBox__notifList__notifElemennt__infosBox" data-request="${request.id}">
-        <div class="sliderBox__sliderContainer__notifBox__notifList__notifElemennt__infosBox__imgBox">
+      <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
+        <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__imgBox">
           <img src="./ressources/images/ace6549ae47649ed5ba46cc872320fba.jpg" alt="profile picture">
         </div>
-        <p class="sliderBox__sliderContainer__notifBox__notifList__notifElemennt__infosBox__text">Demande d'ami envoyée à ${request.receiver.name}.</p>
+        <p class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text">Demande d'ami envoyée à ${request.receiver.name}.</p>
       </div>
       <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox">
         <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox cancelBtn" data-request="${request.id}">Cancel</button>
@@ -36,20 +36,20 @@ function notificationTemplate(request, type) {
     notification.setAttribute('data-name', request.sender.name);
 
     notification.innerHTML = `
-      <div class="sliderBox__sliderContainer__notifBox__notifList__notifElemennt__infosBox" data-request="${request.id}">
-        <div class="sliderBox__sliderContainer__notifBox__notifList__notifElemennt__infosBox__imgBox">
+      <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
+        <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__imgBox">
           <img src="./ressources/images/ace6549ae47649ed5ba46cc872320fba.jpg" alt="profile picture">
         </div>
-        <p class="sliderBox__sliderContainer__notifBox__notifList__notifElemennt__infosBox__text" data-request="${request.id}" data-name="${request.sender.name}">Vous avez accepté la demande d'ami de ${request.sender.name} !</p>
+        <p class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text" data-request="${request.id}" data-name="${request.sender.name}">Vous avez accepté la demande d'ami de ${request.sender.name} !</p>
       </div>
     `
   } else if (type === 'sent' && request.status === 'ACCEPTED') {
     notification.innerHTML = `
-      <div class="sliderBox__sliderContainer__notifBox__notifList__notifElemennt__infosBox" data-request="${request.id}">
-        <div class="sliderBox__sliderContainer__notifBox__notifList__notifElemennt__infosBox__imgBox">
+      <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
+        <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__imgBox">
           <img src="./ressources/images/ace6549ae47649ed5ba46cc872320fba.jpg" alt="profile picture">
         </div>
-        <p class="sliderBox__sliderContainer__notifBox__notifList__notifElemennt__infosBox__text">${request.receiver.name} a accepté votre demande d'ami.</p>
+        <p class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text">${request.receiver.name} a accepté votre demande d'ami.</p>
       </div>
     `
   }
@@ -58,13 +58,13 @@ function notificationTemplate(request, type) {
 }
 
 
-function friendTemplate(friendData, type) {
+function friendTemplate(friendData) {
 
   const friend = document.createElement('div');
   friend.classList.add('sliderBox__sliderContainer__friendBox__friendList__friendElement');
   friend.setAttribute('data-friend', friendData.id);
 
-  if (type === 'received') {
+  if (friendData.sender) {
     friend.innerHTML = `
         <div class="sliderBox__sliderContainer__friendBox__friendList__friendElement__infosBox">
           <div class="sliderBox__sliderContainer__friendBox__friendList__friendElement__infosBox__imgBox">
@@ -78,7 +78,7 @@ function friendTemplate(friendData, type) {
         </div>
     `
 
-  } else if (type === 'sent') {
+  } else if (friendData.receiver) {
     friend.innerHTML = `
         <div class="sliderBox__sliderContainer__friendBox__friendList__friendElement__infosBox">
           <div class="sliderBox__sliderContainer__friendBox__friendList__friendElement__infosBox__imgBox">
@@ -119,4 +119,33 @@ function createSearchResult(user) {
   
   return result;
 
+}
+
+
+function createNewCard(cardData, i) {
+  const cardContainer = document.createElement('div');
+  cardContainer.classList.add('boosterWindow__cardsBox__cardContainer');
+  cardContainer.style.setProperty('--delay', i);
+  const card = document.createElement('div');
+  card.classList.add('boosterWindow__cardsBox__card');
+
+  
+  card.innerHTML = `
+  <div class="boosterWindow__cardsBox__cardFront">
+  <div class="boosterWindow__cardsBox__card__imageBox">
+  <img src="${cardData.image}" alt="card image" draggable="false" oncontextmenu="return false">
+  </div>
+  <span class="boosterWindow__cardsBox__card__name">${cardData.name}</span>
+  </div>
+  <div class="boosterwindow__cardsBox__cardBack">
+      <img src="./ressources/images/card_${cardData.house}.png" alt="card image" draggable="false" oncontextmenu="return false">
+  </div>
+  `
+  
+  card.addEventListener('click', () => {
+      card.classList.add('show');
+  })
+  cardContainer.appendChild(card);
+  
+  return cardContainer;
 }

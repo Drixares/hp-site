@@ -83,7 +83,6 @@ class UsersController {
       const searchq = req.body.searchQuery;
 
       if (!searchq || !/\S/.test(searchq)) return res.json({ message: "Search query is required and should not be only spaces" });
-      console.log(searchq);
 
       const users = await prisma.user.findMany({
         take: 10,
