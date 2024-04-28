@@ -116,7 +116,21 @@ function createSearchResult(user) {
       <span class="pendingMess">pending...</span>
       `
 
-  } else if (user.isFriend) {
+  } else if (user.isFriend === "RECEIVED") {
+    result.innerHTML = `
+      <div class="searchFriendContainer__resultsBox__resultElement__infosBox">
+        <div class="searchFriendContainer__resultsBox__resultElement__infosBox__imgBox">
+          <img src="./ressources/images/ace6549ae47649ed5ba46cc872320fba.jpg" alt="profile picture">
+        </div>
+        <span class="searchFriendContainer__resultsBox__resultElement__name">${user.name}</span>
+      </div>
+      <div class="searchFriendContainer__resultsBox__resultElement__btnBox">
+        <button class="searchFriendContainer__resultsBox__resultElement__btnBox acceptBtn" data-request="${user.requestId}" data-user="${user.id}">Accept</button>
+      </div>
+    `
+  } 
+  
+  else if (user.isFriend) {
     result.innerHTML = `
       <div class="searchFriendContainer__resultsBox__resultElement__infosBox">
         <div class="searchFriendContainer__resultsBox__resultElement__infosBox__imgBox">

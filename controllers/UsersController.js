@@ -143,8 +143,12 @@ class UsersController {
         if (!user.sentFriendRequests.length && !user.receivedFriendRequests.length) {
           user['isFriend'] = false
         } else {
-          if (user.sentFriendRequests[0]?.status === "PENDING" || user.receivedFriendRequests[0]?.status === "PENDING") {
+          if (user.sentFriendRequests[0]?.status === "PENDING") {
+            user['isFriend'] = "RECEIVED"
+            user['requestId'] = user.sentFriendRequests[0].id
+          } else if (user.receivedFriendRequests[0]?.status === "PENDING") {
             user['isFriend'] = "PENDING"
+            user['requestId'] = user.receivedFriendRequests[0].id
           } else {
             user['isFriend'] = true
           }

@@ -1,3 +1,4 @@
+import { FriendRequestStatus } from "@prisma/client";
 import prisma from "../config/prisma.js";
 
 class AuthentificationController {
@@ -13,6 +14,11 @@ class AuthentificationController {
         },
         include: {
           sentFriendRequests: {
+            where: {
+              NOT: {
+                status: FriendRequestStatus.REJECTED
+              }
+            },
             select: {
               id: true,
               status: true,
@@ -25,6 +31,11 @@ class AuthentificationController {
             }
           },
           receivedFriendRequests: {
+            where: {
+              NOT: {
+                status: FriendRequestStatus.REJECTED
+              }
+            },
             select: {
               id: true,
               status: true,

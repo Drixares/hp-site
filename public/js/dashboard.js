@@ -23,7 +23,8 @@ document.addEventListener('click', async (e) => {
     const btnCancel = e.target.closest('.cancelBtn');
     const btnAccept = e.target.closest('.acceptBtn');
     const btnRemove = e.target.closest('.removeBtn');
-    const btnDecline = e.target.closest('.refuseBtn')
+    const btnDecline = e.target.closest('.refuseBtn');
+    const btnAdd = e.target.closest('.addBtn');
     
     if (btn) {
         
@@ -101,7 +102,7 @@ document.addEventListener('click', async (e) => {
                 let text = document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text[data-request="${btnAccept.dataset.request}"]`);
                 text.innerText = `Vous avez accepté la demande d'ami de ${text.dataset.name} !`;        
                 btnAccept.parentNode.remove();
-                
+
                 // Refresh the friends list
                 friendsArray = await fetchFriends();
                 createFriends(friendsArray)
@@ -161,6 +162,31 @@ document.addEventListener('click', async (e) => {
             alert(error.message)
         }
 
+    } else if (btnAdd) {
+
+        try {
+            
+            const response = await fetch('/users/friendRequests/send/' + btnAdd.dataset.user, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${token}`
+                }
+            })
+
+            if (response.status === 200) {
+                const data = await response.json()
+                getSearchResults()
+                createNotifications([], [data.friendRequest])
+
+            } else if (response.status === 400) {
+                alert((await response.json()).message)
+            }
+
+        } catch (error) {
+            alert(error.message)
+        }
+
     }
     
 
@@ -198,7 +224,7 @@ async function getSearchResults() {
             searchFriendResult.innerHTML = 'No results found';
             params.delete('searchq', "")
             const newUrl = `${window.location.pathname}`;
-            console.log(newUrl);
+            // console.log(newUrl);
             window.history.replaceState({}, '', newUrl)
             return;
         };
@@ -246,6 +272,12 @@ openFriendSearch.addEventListener('click', () => {
 filter.addEventListener('click', () => {
     document.querySelector('.searchFriendBox').classList.remove('active');
     document.querySelector('.filter').classList.remove('active');
+    document.getElementById('searchFriendResult').innerHTML = 'No results found'
+    searchFriendInput.value = '';
+    const newUrl = `${window.location.pathname}`;
+    // console.log(newUrl);
+    window.history.replaceState({}, '', newUrl)
+
 });
 
 notifBtn.addEventListener('click', () => {
@@ -435,6 +467,7 @@ function openBoosterWindow(data) {
 
 function createNotifications(receivedFriendRequests, sentFriendRequests) {
     const notificationsList = document.getElementById('notifList');
+    // console.log(receivedFriendRequests, sentFriendRequests);
     
     if (!receivedFriendRequests.length && !sentFriendRequests.length) {
         notificationsList.innerHTML = "No notifications";
@@ -444,9 +477,6 @@ function createNotifications(receivedFriendRequests, sentFriendRequests) {
     for (friendRequestSent of sentFriendRequests) {
         if (friendRequestSent.status === 'REJECTED') continue;
             notificationsList.appendChild(notificationTemplate(friendRequestSent, 'sent'));
-        if (friendRequestSent.status === 'ACCEPTED') {
-            friendsList.appendChild(friendTemplate(friendRequestSent, 'sent'));
-        }
     }
     
     for (friendRequestReceived of receivedFriendRequests) {
@@ -458,6 +488,7 @@ function createNotifications(receivedFriendRequests, sentFriendRequests) {
 
 function createFriends(friendsArray) {
     const friendsList = document.getElementById('friendList');
+    console.log(friendsList);
 
     if (!friendsArray.length) {
         friendsList.innerHTML = "No friends";
@@ -469,6 +500,8 @@ function createFriends(friendsArray) {
     for (friendData of friendsArray) {
         friendsList.appendChild(friendTemplate(friendData));
     }
+
+    document.getElementById('friendNumberData').innerText = friendsArray.length;
 }
 
 async function fetchFriends() {
@@ -504,7 +537,7 @@ async function fetchFriends() {
         
     } catch (error) {
         
-        alert('Internal server error.')
+        alert(error.message)
 
     }
 

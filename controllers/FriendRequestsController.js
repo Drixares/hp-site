@@ -13,7 +13,6 @@ class FriendRequestsController {
 
       if (userId === receiverId) return res.status(400).json({ message: 'You cannot ask yourself to be friend :/' })
 
-
       // Vérifier si une demande d'ami a déjà été envoyée par l'autre utilisateur.
       const existingFriendRequest = await prisma.friendRequest.findFirst({
         orderBy: {
@@ -50,16 +49,25 @@ class FriendRequestsController {
         data: {
           senderId: userId,
           receiverId: receiverId
+        },
+        select: {
+          status: true,
+          id: true,
+          receiver: {
+            select: {
+              name: true,
+            }
+          }
         }
       })
       
-      return res.status(200).json({ message: "Friend request sent" });
+      return res.status(200).json({ message: "Friend request sent", friendRequest });
 
     } catch (error) {
 
       // Dans le cas où l'envoyeur a déjà envoyé une demande d'ami à la personne
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-        return res.status(400).json({ message: "Friend request already used." });
+        return res.status(400).json({ message: "Friend request already used or/and rejected." });
       }
 
       return res.status(500).json({ message: error.message })
