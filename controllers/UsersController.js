@@ -100,20 +100,59 @@ class UsersController {
           name: true,
           sentFriendRequests: {
             where: {
-              receiverId: userId,
-              status: 'ACCEPTED'
+              OR: [
+                {
+                  receiverId: userId,
+                  status: 'ACCEPTED' 
+                },
+                {
+                  receiverId: userId,
+                  status: 'PENDING' 
+                }
+              ]
             },
+            select: {
+              id: true,
+              status: true
+            }
           },
           receivedFriendRequests: {
             where: {
-              senderId: userId,
-              status: 'ACCEPTED'
+              OR: [
+                {
+                  senderId: userId,
+                  status: 'ACCEPTED' 
+                },
+                {
+                  senderId: userId,
+                  status: 'PENDING' 
+                }
+              ]
             },
+            select: {
+              id: true,
+              status: true
+            }
           }
         }
       });
 
       if (!users || !users.length ) return res.status(404).json({ message: "No results found" });
+
+      for (let user of users) {
+        if (!user.sentFriendRequests.length && !user.receivedFriendRequests.length) {
+          user['isFriend'] = false
+        } else {
+          if (user.sentFriendRequests[0]?.status === "PENDING" || user.receivedFriendRequests[0]?.status === "PENDING") {
+            user['isFriend'] = "PENDING"
+          } else {
+            user['isFriend'] = true
+          }
+        }
+
+        delete user.receivedFriendRequests;
+        delete user.sentFriendRequests
+      }
 
       return res.status(200).json(users)
 

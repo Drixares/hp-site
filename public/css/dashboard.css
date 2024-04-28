@@ -970,6 +970,16 @@ main h2 {
   font-size: var(--text-m-size);
 }
 
+.addedIcon {
+  font-size: var(--text-mp-size);
+  color: #3AD152;
+}
+
+.pendingMess {
+  font-size: var(--text-mp-size);
+  color: var(--texte-sous-texte-2);
+}
+
 @media (max-width: 900px) {
   .sidebar {
     position: fixed;

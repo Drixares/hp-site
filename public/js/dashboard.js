@@ -443,7 +443,7 @@ function createNotifications(receivedFriendRequests, sentFriendRequests) {
     
     for (friendRequestSent of sentFriendRequests) {
         if (friendRequestSent.status === 'REJECTED') continue;
-        notificationsList.appendChild(notificationTemplate(friendRequestSent, 'sent'));
+            notificationsList.appendChild(notificationTemplate(friendRequestSent, 'sent'));
         if (friendRequestSent.status === 'ACCEPTED') {
             friendsList.appendChild(friendTemplate(friendRequestSent, 'sent'));
         }
