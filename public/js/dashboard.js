@@ -79,6 +79,10 @@ document.addEventListener('click', async (e) => {
 
             if (response.status === 200) {
                 document.querySelector(`[data-request="${btnCancel.dataset.request}"]`).remove();
+                console.log(document.getElementById('notifList').children.length);
+                if (document.getElementById('notifList').children.length === 0) {
+                    document.getElementById('notifList').innerHTML = 'No notifications'
+                }
             } else {
                 alert('An error occured');
             }
@@ -99,9 +103,17 @@ document.addEventListener('click', async (e) => {
                 })
                         
             if (response.status === 200) {
-                let text = document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text[data-request="${btnAccept.dataset.request}"]`);
-                text.innerText = `Vous avez accepté la demande d'ami de ${text.dataset.name} !`;        
-                btnAccept.parentNode.remove();
+                const data = await response.json()
+
+                if (btnAccept.closest('.sliderBox__sliderContainer__notifBox__notifList__notifElement')) {
+                    btnAccept.closest('.sliderBox__sliderContainer__notifBox__notifList__notifElement').remove()
+
+                } else {
+                    document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement[data-request="${btnAccept.dataset.request}"]`).remove()
+                    getSearchResults()
+                }
+
+                createNotifications([data.friendRequest], [])
 
                 // Refresh the friends list
                 friendsArray = await fetchFriends();
@@ -133,6 +145,10 @@ document.addEventListener('click', async (e) => {
                 friendsArray = await fetchFriends();
                 createFriends(friendsArray)
 
+                if (document.getElementById('friendList').children.length === 0) {
+                    document.getElementById('friendList').innerHTML = 'No friends'
+                }
+
             } else {
                 alert('An error occured');
             }
@@ -154,6 +170,9 @@ document.addEventListener('click', async (e) => {
 
             if (response.status === 200) {
                 document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement[data-request="${btnDecline.dataset.request}"]`).remove();
+                if (document.getElementById('notifList').children.length === 0) {
+                    document.getElementById('notifList').innerHTML = 'No notifications'
+                }
             } else {
                 alert('An error occured');
             }
@@ -176,6 +195,11 @@ document.addEventListener('click', async (e) => {
 
             if (response.status === 200) {
                 const data = await response.json()
+
+                if (document.getElementById('notifList').children.length === 0) {
+                    document.getElementById('notifList').innerHTML = ''
+                }
+
                 getSearchResults()
                 createNotifications([], [data.friendRequest])
 
@@ -467,7 +491,6 @@ function openBoosterWindow(data) {
 
 function createNotifications(receivedFriendRequests, sentFriendRequests) {
     const notificationsList = document.getElementById('notifList');
-    // console.log(receivedFriendRequests, sentFriendRequests);
     
     if (!receivedFriendRequests.length && !sentFriendRequests.length) {
         notificationsList.innerHTML = "No notifications";
@@ -476,7 +499,7 @@ function createNotifications(receivedFriendRequests, sentFriendRequests) {
     
     for (friendRequestSent of sentFriendRequests) {
         if (friendRequestSent.status === 'REJECTED') continue;
-            notificationsList.appendChild(notificationTemplate(friendRequestSent, 'sent'));
+        notificationsList.appendChild(notificationTemplate(friendRequestSent, 'sent'));
     }
     
     for (friendRequestReceived of receivedFriendRequests) {
@@ -488,7 +511,6 @@ function createNotifications(receivedFriendRequests, sentFriendRequests) {
 
 function createFriends(friendsArray) {
     const friendsList = document.getElementById('friendList');
-    console.log(friendsList);
 
     if (!friendsArray.length) {
         friendsList.innerHTML = "No friends";

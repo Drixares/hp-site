@@ -82,7 +82,7 @@ class FriendRequestsController {
       const { requestId } = req.params;
       const userId = req.user.data.id;
 
-      const friendRequest = await prisma.friendRequest.findFirst({
+      const isFriendRequest = await prisma.friendRequest.findFirst({
         where: {
           AND: [
             { id: parseInt(requestId) },
@@ -92,20 +92,28 @@ class FriendRequestsController {
         }
       })
 
-      if (!friendRequest) return res.status(404).json({ message: "Friend request not found" });
+      if (!isFriendRequest) return res.status(404).json({ message: "Friend request not found" });
       
-      const acceptFriendRequest = await prisma.friendRequest.update({
+      const friendRequest = await prisma.friendRequest.update({
         where: {
           id: parseInt(requestId)
         },
         data: {
           status: FriendRequestStatus.ACCEPTED,
           respondedAt: new Date()
+        },
+        select: {
+          status: true,
+          id: true,
+          sender: {
+            select: {
+              name: true,
+            }
+          }
         }
       })
 
-
-      return res.status(200).json({ message: "Friend request accepted" });
+      return res.status(200).json({ message: "Friend request accepted", friendRequest });
 
     } catch (error) {
       
