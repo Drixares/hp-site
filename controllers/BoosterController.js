@@ -20,7 +20,7 @@ class BoosterController {
 
       if (!lastBooster) return res.status(404).json({ message: "Booster not found"});
 
-      return res.status(200).json({next_booster: parseInt(lastBooster.booster)});
+      return res.status(200).json({ booster: parseInt(lastBooster.booster) });
 
     } catch (error) {
       
@@ -35,7 +35,6 @@ class BoosterController {
       const userEmail = req.user.data.email;
       // const nextBooster = Date.now() + 1000 * 60 * 60 * 24
       const nextBooster = Date.now() + 1000 * 3
-      console.log(nextBooster);
       
       const lastBooster = await prisma.user.update({
         where: {
@@ -43,12 +42,15 @@ class BoosterController {
         },
         data: {
           booster: nextBooster.toString(),
-        }
+        },
+        select: {
+          booster: true,
+        } 
       })
 
       if (!lastBooster) return res.status(404).json({ message: "Booster not found"});
 
-      return res.status(200).json({ message: "Booster updated", next_booster: lastBooster.booster });
+      return res.status(200).json({ message: "Booster updated", booster: parseInt(lastBooster.booster) });
 
     } catch (error) {
       
@@ -148,16 +150,20 @@ class BoosterController {
 
       // Update booster timer
       const nextBooster = Date.now() + 1000 * 60 * 60 * 24
-      await prisma.user.update({
+
+      const updateBooster = await prisma.user.update({
         where: {
           email: userEmail,
         },
         data: {
           booster: nextBooster.toString(),
+        },
+        select: {
+          booster: true,
         }
       })
 
-      return res.status(200).json({ cards: allCards, next_booster: nextBooster});
+      return res.status(200).json({ cards: allCards, booster: updateBooster.booster});
 
 
     } catch (error) {

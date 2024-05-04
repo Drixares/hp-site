@@ -3,6 +3,7 @@ import AuthentificationController from '../controllers/AuthentificationControlle
 import BoosterController from '../controllers/BoosterController.js';
 import CardsController from '../controllers/CardsController.js';
 import FriendRequestsController from '../controllers/FriendRequestsController.js';
+import TradeController from '../controllers/TradeController.js';
 import UsersController from '../controllers/UsersController.js';
 import { authentificationToken } from '../middlewares/Auth.js';
 
@@ -40,6 +41,12 @@ router.get('/users/friends', authentificationToken, FriendRequestsController.get
 router.get('/users/booster', authentificationToken, BoosterController.getTimer)
 router.put('/users/booster', authentificationToken, BoosterController.updateTimer)
 router.post('/users/booster/open', authentificationToken, BoosterController.openBooster)
+
+// Envoi, acceptation, refus et annulation d'échange
+router.post('/users/tradeRequests/send', authentificationToken, TradeController.askTrade)
+router.put('/users/tradeRequests/accept/:requestId', authentificationToken, TradeController.acceptTrade)
+router.delete('/users/tradeRequests/decline/:requestId', authentificationToken, TradeController.declineTrade)
+router.delete('/users/tradeRequests/cancel/:requestId', authentificationToken, TradeController.cancelTrade)
 
 
 let lastVisited = "Gryffindor";

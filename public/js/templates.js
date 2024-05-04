@@ -70,10 +70,10 @@ function friendTemplate(friendData) {
           <div class="sliderBox__sliderContainer__friendBox__friendList__friendElement__infosBox__imgBox">
             <img src="./ressources/images/ace6549ae47649ed5ba46cc872320fba.jpg" alt="profile picture">
           </div>
-          <span class="sliderBox__sliderContainer__friendBox__friendList__friendElement__name">${friendData.sender.name}</span>
+          <span class="sliderBox__sliderContainer__friendBox__friendList__friendElement__name" data-friend="${friendData.sender.id}">${friendData.sender.name}</span>
         </div>
         <div class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox">
-          <button class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox tradeBtn" data-friend="${friendData.id}">Trade</button>
+          <button class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox tradeBtn" data-friend="${friendData.sender.id}">Trade</button>
           <button class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox removeBtn" data-friend="${friendData.id}">Remove</button>
         </div>
     `
@@ -84,10 +84,10 @@ function friendTemplate(friendData) {
           <div class="sliderBox__sliderContainer__friendBox__friendList__friendElement__infosBox__imgBox">
             <img src="./ressources/images/ace6549ae47649ed5ba46cc872320fba.jpg" alt="profile picture">
           </div>
-          <span class="sliderBox__sliderContainer__friendBox__friendList__friendElement__name">${friendData.receiver.name}</span>
+          <span class="sliderBox__sliderContainer__friendBox__friendList__friendElement__name" data-friend="${friendData.receiver.id}">${friendData.receiver.name}</span>
         </div>
         <div class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox">
-          <button class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox tradeBtn" data-friend="${friendData.id}">Trade</button>
+          <button class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox tradeBtn" data-friend="${friendData.receiver.id}">Trade</button>
           <button class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox removeBtn" data-friend="${friendData.id}">Remove</button>
         </div>
     `

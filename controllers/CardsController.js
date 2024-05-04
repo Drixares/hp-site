@@ -6,7 +6,11 @@ class CardsController {
 
     try {
 
-      const cards = await prisma.card.findMany();
+      const cards = await prisma.card.findMany({
+        orderBy: {
+          name: "asc"
+        }
+      });
 
       return res.status(200).json(cards)
 

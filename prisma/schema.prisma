@@ -26,6 +26,9 @@ model User {
 
   sentFriendRequests     FriendRequest[] @relation("FriendRequestsSent")
   receivedFriendRequests FriendRequest[] @relation("FriendRequestsReceived")
+
+  sentTradeRequests     TradeRequest[] @relation("TradeRequestsSent")
+  receivedTradeRequests TradeRequest[] @relation("TradeRequestsReceived")
 }
 
 model FriendRequest {
@@ -40,6 +43,21 @@ model FriendRequest {
   receiver     User   @relation("FriendRequestsReceived", fields: [receiverId], references: [id])
 
   @@unique([senderId, receiverId])
+}
+
+model TradeRequest {
+  id             Int @id @default(autoincrement())
+  senderId       String
+  receiverId     String
+  status         TradeRequestStatus @default(PENDING)
+  sentAt         DateTime @default(now())
+  respondedAt    DateTime?
+  giftedCardId   Int
+  receivedCardId Int
+
+
+  sender       User   @relation("TradeRequestsSent", fields: [senderId], references: [id])
+  receiver     User   @relation("TradeRequestsReceived", fields: [receiverId], references: [id])
 }
 
 model Card {
@@ -65,6 +83,12 @@ model UserCard {
 }
 
 enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum TradeRequestStatus {
   PENDING
   ACCEPTED
   REJECTED

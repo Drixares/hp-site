@@ -1,62 +1,52 @@
-//get params url
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-const slug = urlParams.get("name");
 
-let url = "https://hp-api.lainocs.fr/characters/" + slug;
-let listeB = document.getElementById("list");
+// Méthode de cache pour éviter de fetch 2x lorque 
 
-let urlpost = "http://192.168.177.183:3000/iot/dataled";
-//post for update house in server
-async function postJSON(data) {
-  try {
-    const response = await fetch(urlpost, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+async function fetchCards() {
 
-    const result = await response.json();
-    console.log("Success:", result);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
+  // Je crée le cache
+  let cache;
 
-async function fetchData() {
+  return async function(useCache) {
 
-    try {
-
-        const response = await fetch(url);
-        const data = await response.json();
-
-        //creer un element div
-        let i = document.createElement("div");
-        //ajouter une classe carte
-        i.classList.add("carte");
-        //mettre li en enfant de listeB (<ul>)
-        listeB.appendChild(i);
-
-        //je crée mon model de carte
-        i.innerHTML = `
-        <div class="card">
-            <div class="img-box">
-            <img src="${data.image}" class="card-img" alt="Avatar">
-            </div>
-            <div class="container">
-            <h4><b>${data.name}</b></h4>
-            <p>${data.house}</p>
-            </div>
-        </div>;
-        `
-        await postJSON({ lastVisited: data.house });
-
-    } catch (error) {
-        alert(error)
+    // Si il y a un argument
+    if (cache && useCache) {
+      return [cache, "N'appelle pas la fonction"]
     }
 
+    try {
+      
+      const responseCards = await fetch('/users/cards/show', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      
+      const cardsData = await responseCards.json();
+      
+      cache = cardsData;
+      return cardsData
+  
+    } catch (error) {
+      alert(error.message)
+    }
+  }
+
 }
 
-fetchData()
+(async () => {
+  const cards = await fetchCards()
+  const testCard = await cards();
+  console.log(testCard);
+  console.log(await cards(true));
+
+})()
+
+
+// Je veux éviter de fetch plusieurs fois si mes cartes n'ont pas changées
+// Donc je crée un cache dès la première instance de la fonction
+// Et le cache devient le résultat du 1er fetch
+
+// Problème :
+// La valeur peut changer après la 1ere instance

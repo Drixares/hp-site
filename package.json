@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.12.1",
+    "@prisma/client": "^5.13.0",
     "@vinejs/vine": "^2.0.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
@@ -23,6 +23,6 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "prisma": "^5.12.1"
+    "prisma": "^5.13.0"
   }
 }

@@ -1,15 +1,17 @@
-const popupBtn = document.querySelector('.popupBtn');
+// const popupBtn = document.querySelector('.popupBtn');
 const toggleMode = document.querySelector('.toggleMode');
 const deployNav = document.querySelector('.deployNav');
 const logoutBtn = document.getElementById('logoutBtn');
 const dateData = document.getElementById('dateData');
-let timerData = document.querySelector('.timerBooster');
 const cardNumberData = document.getElementById('cardNumberData');
 const boosterContainer = document.querySelector('.profileDashboardBox__boosterBox');
 const notifBtn = document.querySelector('.notificationsBtn')
 const openFriendSearch = document.getElementById('openFriendSearch');
 const filter = document.querySelector('.filter');
 const searchFriendInput = document.getElementById('searchFriend');
+let timerData = document.querySelector('.timerBooster');
+let cardsCache = null;
+let userCardsCache = null;
 
 const date = new Date();
 const options = { weekday: 'long', month: 'long', day: 'numeric' };
@@ -19,14 +21,18 @@ dateData.innerText = dateString;
 // ----------------- Click Events ----------------- //
 
 document.addEventListener('click', async (e) => {
-    const btn = e.target.closest('#openBoosterBtn');
+    const btnBooster = e.target.closest('#openBoosterBtn');
     const btnCancel = e.target.closest('.cancelBtn');
     const btnAccept = e.target.closest('.acceptBtn');
     const btnRemove = e.target.closest('.removeBtn');
     const btnDecline = e.target.closest('.refuseBtn');
     const btnAdd = e.target.closest('.addBtn');
+    const tradeBtn = e.target.closest('.tradeBtn');
+    const dropDownSelected = e.target.closest('.dropdown__selected');
+    const dropDownElement = e.target.closest('.dropdown__list__element')
+    const confirmTradeBtn = e.target.closest('.confirmTradeBtn');
     
-    if (btn) {
+    if (btnBooster) {
         
         try {
             const timerDataDynamic = document.createElement('span');
@@ -42,8 +48,8 @@ document.addEventListener('click', async (e) => {
             })
     
             const data = await response.json();
-            const timerMs = data.next_booster - Date.now();
-            btn.remove();
+            const timerMs = data.booster - Date.now();
+            btnBooster.remove();
 
             // ---------------- Create a new window for the booster opening ----------------- //
 
@@ -113,7 +119,7 @@ document.addEventListener('click', async (e) => {
                     getSearchResults()
                 }
 
-                createNotifications([data.friendRequest], [])
+                createNotifications([data.friendRequest], [], [], [])
 
                 // Refresh the friends list
                 friendsArray = await fetchFriends();
@@ -201,7 +207,7 @@ document.addEventListener('click', async (e) => {
                 }
 
                 getSearchResults()
-                createNotifications([], [data.friendRequest])
+                createNotifications([], [data.friendRequest], [], [])
 
             } else if (response.status === 400) {
                 alert((await response.json()).message)
@@ -211,7 +217,47 @@ document.addEventListener('click', async (e) => {
             alert(error.message)
         }
 
-    }
+    } else if (tradeBtn) {
+        const friendId = tradeBtn.dataset.friend;
+        const friendName = document.querySelector(`.sliderBox__sliderContainer__friendBox__friendList__friendElement__name[data-friend="${tradeBtn.dataset.friend}"]`).innerText;
+        
+        openTradeWindow(friendId, friendName)
+
+    } else if (dropDownSelected) {
+        // document.querySelector('.dropdown__list.active')?.classList.remove('active')
+        document.querySelector(`.dropdown__list[data-dropdown="${dropDownSelected.dataset.dropdown}"]`).classList.toggle('active')
+    } else if (dropDownElement) {
+        const cardSelected = document.querySelector(`.dropdown__selected[data-dropdown="${dropDownElement.dataset.dropdown}"]`);
+        cardSelected.innerText = dropDownElement.innerText;
+        cardSelected.setAttribute('data-card', `${dropDownElement.dataset.card}`)
+    
+    } else if (confirmTradeBtn) {
+
+        try {
+            
+            const response = await fetch('/users/tradeRequests/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    giftCard: document.querySelector('.dropdown__selected[data-dropdown="give"]').dataset.card,
+                    requestedCard: document.querySelector('.dropdown__selected[data-dropdown="receive"]').dataset.card,
+                    friendId: confirmTradeBtn.dataset.friend,
+                })
+            })
+
+            if (response.status === 200) {
+                const data = await response.json()
+                console.log(data);
+            }
+
+        } catch (error) {
+            alert(error.message)
+        }
+
+    } 
     
 
 })
@@ -294,23 +340,26 @@ openFriendSearch.addEventListener('click', () => {
 });
 
 filter.addEventListener('click', () => {
-    document.querySelector('.searchFriendBox').classList.remove('active');
+
+    if (document.querySelector('.searchFriendBox.active')) {
+        document.querySelector('.searchFriendBox.active')?.classList.remove('active');
+        document.getElementById('searchFriendResult').innerHTML = 'No results found'
+        searchFriendInput.value = '';
+        const newUrl = `${window.location.pathname}`;
+        // console.log(newUrl);
+        window.history.replaceState({}, '', newUrl)
+        
+    } else {
+        document.querySelector('.tradeBox.active')?.classList.remove('active');
+    }
+    
     document.querySelector('.filter').classList.remove('active');
-    document.getElementById('searchFriendResult').innerHTML = 'No results found'
-    searchFriendInput.value = '';
-    const newUrl = `${window.location.pathname}`;
-    // console.log(newUrl);
-    window.history.replaceState({}, '', newUrl)
 
 });
 
 notifBtn.addEventListener('click', () => {
     document.querySelector('.sliderBox').classList.toggle('open');
 })
-
-popupBtn.addEventListener('click', () => {
-    document.querySelector('.popupBox').classList.toggle('active');
-});
 
 toggleMode.addEventListener('click', () => {
 
@@ -363,6 +412,7 @@ async function fetchData() {
     })
     
     const cardsData = await responseCards.json();
+    userCardsCache = cardsData;
     
     return { userData, cardsData }
 
@@ -409,7 +459,7 @@ function updateProfile(userData, cardsData) {
                 
     document.getElementById('friendNumberData').innerText = friendNumber;
 
-    let timerMs = userData.user.next_booster - Date.now();
+    let timerMs = userData.user.booster - Date.now();
     
     updateTimer(timerMs);
     if (timerMs <= 0) {
@@ -433,6 +483,7 @@ async function updateCardsData() {
         })
         
         const cardsData = await responseCards.json();
+        userCardsCache = cardsData;
 
         document.getElementById('cardNumberData').innerText = cardsData.numberCards;
         document.getElementById('houseNumberData').innerText = cardsData.numberHouses + ' / 4';
@@ -442,7 +493,6 @@ async function updateCardsData() {
     }
 
 } 
-
 
 function getBoosterBtn() {
     
@@ -489,7 +539,7 @@ function openBoosterWindow(data) {
 
 }
 
-function createNotifications(receivedFriendRequests, sentFriendRequests) {
+function createNotifications(receivedFriendRequests, sentFriendRequests, sentTradeRequests, receivedTradeRequests) {
     const notificationsList = document.getElementById('notifList');
     
     if (!receivedFriendRequests.length && !sentFriendRequests.length) {
@@ -547,20 +597,92 @@ async function fetchFriends() {
     }
 } 
 
+function createOpenTradeWindow() {
+    let cache = null;
+
+    return async function openTradeWindow(friendId, friendName) {
+
+        document.querySelector('.tradeBox__friendName').innerText = friendName;
+        document.querySelector('.filter').classList.toggle('active');
+        document.querySelector('.tradeBox').classList.toggle('active');
+        document.querySelector('.confirmTradeBtn').setAttribute('data-friend', friendId)
+
+        if (cache !== null) {
+            return cache;
+        }
+
+        const receiveList = document.querySelector('.dropdown__list[data-dropdown="receive"]');
+        const giveList = document.querySelector('.dropdown__list[data-dropdown="give"]');
+        const cards = await fetchAllCards()
+        
+        // What i can give
+        for (let i = 0; i < userCardsCache.cards.length; i++) {
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('dropdown__list__element')
+            cardElement.setAttribute('data-dropdown', 'give')
+            cardElement.setAttribute('data-card', userCardsCache.cards[i].card.id)
+            cardElement.innerText = userCardsCache.cards[i].card.name
+
+            giveList.appendChild(cardElement)
+        }
+
+        // What i want to receive
+        for (const card of cards) {
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('dropdown__list__element')
+            cardElement.setAttribute('data-dropdown', 'receive')
+            cardElement.setAttribute('data-card', card.id)
+            cardElement.innerText = card.name
+
+            receiveList.appendChild(cardElement)
+        }
+
+
+        cache = true;
+        return cache;
+    }
+}
+
+async function fetchAllCards() {
+
+    if (cardsCache !== null) {
+        return cardsCache
+    }
+
+    try {
+        
+        const response = await fetch('/cards')
+        
+        if (response.status === 200) {
+            const data = await response.json()
+            console.log(data);
+
+            cardsCache = data
+            return data
+        }
+
+    } catch (error) {
+        alert(error.message)
+    }
+
+}
+
 // Fetch data from the server and update the profile at the loading of the page
 (async () => {
 
     try {
         const { userData, cardsData } = await fetchData();
         updateProfile(userData, cardsData);
-        createNotifications(userData.user.receivedFriendRequests, userData.user.sentFriendRequests);
+        createNotifications(userData.user.receivedFriendRequests, userData.user.sentFriendRequests, userData.user.sentTradeRequests, userData.user.receivedTradeRequests);
         let friendsArray = await fetchFriends();
         createFriends(friendsArray)
         
     } catch (error) {
         
         alert(error.message)
-
+        
     }
-
+    
 })();
+
+const openTradeWindow = createOpenTradeWindow();

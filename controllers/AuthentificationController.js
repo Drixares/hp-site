@@ -1,4 +1,4 @@
-import { FriendRequestStatus } from "@prisma/client";
+import { FriendRequestStatus, TradeRequestStatus } from "@prisma/client";
 import prisma from "../config/prisma.js";
 
 class AuthentificationController {
@@ -12,7 +12,12 @@ class AuthentificationController {
         where: {
           email: userEmail
         },
-        include: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+          booster: true,
           sentFriendRequests: {
             where: {
               NOT: {
@@ -47,27 +52,50 @@ class AuthentificationController {
               }
             }
           },
-        }
+          sentTradeRequests: {
+            where: {
+              NOT: {
+                status: TradeRequestStatus.REJECTED
+              }
+            },
+            select: {
+              id: true,
+              status: true,
+              sentAt: true,
+              receiver: {
+                select: {
+                  name: true,
+                }
+              }
+            }
+          },
+          receivedTradeRequests: {
+            where: {
+              NOT: {
+                status: TradeRequestStatus.REJECTED
+              }
+            },
+            select: {
+              id: true,
+              status: true,
+              sentAt: true,
+              sender: {
+                select: {
+                  name: true,
+                }
+              }
+            }
+          },
+        },
       })
 
       if (!user) return res.status(404).json({ message: "User not found"});
 
-      return res.status(200).json({
-        message: "User data found",
-        user: {
-          name: user.name,
-          email: user.email,
-          createdAt: user.createdAt,
-          next_booster: user.booster,
-          sentFriendRequests: user.sentFriendRequests,
-          receivedFriendRequests: user.receivedFriendRequests
-        }
-      })
-
-      // return res.status(200).json(user);
-
+      return res.status(200).json({ message: "User data found", user })
+      
     } catch(error) {
-      return res.status(500).json({ message: "Internal server error"})
+      console.log(error.message);
+      return res.status(500).json({ message: error.message })
     }
   }
   

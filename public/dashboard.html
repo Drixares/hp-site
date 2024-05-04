@@ -131,7 +131,7 @@
 
       </main>
 
-      <div class="popupBtn">
+      <!-- <div class="popupBtn">
         <i class="fa-regular fa-comments"></i>
       </div>
       
@@ -150,7 +150,35 @@
             <button type="submit" class="tradeFormBtn">Send</button>
           </form>
         </div>
+      </div> -->
+
+      <div class="tradeBox">
+        <div class="tradeBox__mainContent">
+          <h3 class="tradeBox__mainContent__title">Trade with <span class="tradeBox__friendName">??</span></h3>
+          <div class="tradeBox__mainContent__tradeContainer">
+            <div class="tradeBox__mainContent__tradeContainer__giveBox">
+              <span>What you give</span>
+              <div class="dropdown">
+                <div class="dropdown__selected" data-dropdown="give">Chose a card...</div>
+                <div class="dropdown__list" data-dropdown="give"></div>
+              </div>
+            </div>
+            <div class="tradeBox__mainContent__tradeContainer__receiveBox">
+              <span>What you receive</span>
+              <div class="dropdown">
+                <div class="dropdown__selected" data-dropdown="receive">Chose a card...</div>
+                <div class="dropdown__list" data-dropdown="receive"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tradeBox__btnBox">
+          <button class="confirmTradeBtn">Ask for trading</button>
+        </div>
+  
       </div>
+
+
       <div class="searchFriendBox">
         <div class="searchFriendContainer">
           <input type="text" name="searchFriend" id="searchFriend" placeholder="Looking for a friend ?" autocomplete="off" autocorrect="off" novalidate spellcheck="false">
@@ -159,6 +187,8 @@
           </div>
         </div>
       </div>
+
+
 
       <div class="filter"></div>
 
