@@ -281,7 +281,8 @@ class FriendRequestsController {
               respondedAt: true,
               receiver: {
                 select: {
-                  name: true
+                  name: true,
+                  id: true,
                 }
               }
             }

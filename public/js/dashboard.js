@@ -256,8 +256,7 @@ document.addEventListener('click', async (e) => {
             })
 
             if (response.status === 200) {
-                const data = await response.json()
-                console.log(data);
+                playCheckAnimation();
             }
 
         } catch (error) {
@@ -674,6 +673,34 @@ async function fetchAllCards() {
     }
 
 }
+
+function playCheckAnimation() {
+
+    const playerBg = document.createElement('div');
+    playerBg.classList.add('playerBg');
+
+    const player = document.createElement('lottie-player');
+    player.classList.add('checkAnimation');
+
+    player.src = "https://lottie.host/d6e61a5f-00d2-45c5-bb55-0a702d15b942/NOq0Bo4CDR.json";
+    player.autoplay = true;
+    player.speed = 1;
+    player.background = 'transparent';
+
+    playerBg.appendChild(player);
+
+    const tradeBox = document.querySelector('.tradeBox')
+    tradeBox.appendChild(playerBg);
+
+    player.addEventListener('complete', () => {
+        setTimeout(() => {
+            player.remove();
+            tradeBox.classList.remove('active');
+            filter.classList.remove('active');
+        }, 500);
+    })
+}
+
 
 // Fetch data from the server and update the profile at the loading of the page
 (async () => {
