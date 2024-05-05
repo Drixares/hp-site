@@ -253,9 +253,9 @@ document.addEventListener('click', async (e) => {
         cardSelected.setAttribute('data-card', `${dropDownElement.dataset.card}`)
         document.querySelector(`.dropdown__list[data-dropdown="${dropDownElement.dataset.dropdown}"]`).classList.remove('active')
 
-    } else if (target.matches('.confirmTradeBtn')) {
+    } else if (target.matches('.SendTradeRequest[data-type="traderequest"]')) {
 
-        const confirmTradeBtn = e.target.closest('.confirmTradeBtn');
+        const SendTradeRequest = e.target.closest('.SendTradeRequest');
 
         try {
             
@@ -268,12 +268,14 @@ document.addEventListener('click', async (e) => {
                 body: JSON.stringify({
                     giftCard: document.querySelector('.dropdown__selected[data-dropdown="give"]').dataset.card,
                     requestedCard: document.querySelector('.dropdown__selected[data-dropdown="receive"]').dataset.card,
-                    friendId: confirmTradeBtn.dataset.friend,
+                    friendId: SendTradeRequest.dataset.friend,
                 })
             })
             
             if (response.status === 200) {
+                const data = await response.json();
                 playCheckAnimation();
+                createNotifications([], [], [data.tradeRequest], [])
             }
             
         } catch (error) {
@@ -281,7 +283,88 @@ document.addEventListener('click', async (e) => {
         }
         
         
-    }
+    } else if (target.matches('.cancelBtn[data-type="traderequest"]')) {
+
+        try {
+            
+            const cancelTradeBtn = e.target.closest('.cancelBtn[data-type="traderequest"]');
+
+            const response = await fetch('/users/tradeRequests/cancel/' + cancelTradeBtn.dataset.request, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${token}`
+                }
+            })
+
+            if (response.status === 200) {
+                document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement[data-request="${cancelTradeBtn.dataset.request}"]`).remove();
+                if (document.getElementById('notifList').children.length === 0) {
+                    document.getElementById('notifList').innerHTML = 'No notifications'
+                }
+
+            } else {
+                alert('An error occured');
+            }
+
+        } catch (error) {
+            alert(error.message)
+        }
+
+
+    } else if (target.matches('.acceptBtn[data-type="traderequest"]')) {
+
+        try {
+            
+            const acceptTradeBtn = e.target.closest('.acceptBtn[data-type="traderequest"]');
+
+            const response = await fetch('/users/tradeRequests/accept/' + acceptTradeBtn.dataset.request, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${token}`
+                }
+            })
+
+            if (response.status === 200) {
+                // A compléter  
+            } else {
+                alert('An error occured');
+            }
+
+        } catch (error) {
+            
+        }
+
+    } else if (target.matches('.refuseBtn[data-type="traderequest"]')) {
+
+        try {
+            
+            const removeTradeBtn = e.target.closest('.refuseBtn[data-type="traderequest"]');
+
+            const response = await fetch('/users/tradeRequests/decline/' + removeTradeBtn.dataset.request, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${token}`
+                }
+            })
+
+            if (response.status === 200) {
+                document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement[data-request="${removeTradeBtn.dataset.request}"]`).remove();
+                if (document.getElementById('notifList').children.length === 0) {
+                    document.getElementById('notifList').innerHTML = 'No notifications'
+                }
+
+            } else {
+                alert('An error occured');
+            }
+
+        } catch (error) {   
+            alert(error.message)
+        }
+
+    } else if (target.matches('.seeTradeBtn[data-type="traderequest"]')) {}
     
 })
 
@@ -566,7 +649,7 @@ function openBoosterWindow(data) {
 function createNotifications(receivedFriendRequests, sentFriendRequests, sentTradeRequests, receivedTradeRequests) {
     const notificationsList = document.getElementById('notifList');
     
-    if (!receivedFriendRequests.length && !sentFriendRequests.length) {
+    if (!receivedFriendRequests.length && !sentFriendRequests.length && !sentTradeRequests.length && !receivedTradeRequests.length) {
         notificationsList.innerHTML = "No notifications";
         return;
     }
@@ -639,7 +722,7 @@ function createOpenTradeWindow() {
         document.querySelector('.tradeBox__friendName').innerText = friendName;
         document.querySelector('.filter').classList.toggle('active');
         document.querySelector('.tradeBox').classList.toggle('active');
-        document.querySelector('.confirmTradeBtn').setAttribute('data-friend', friendId)
+        document.querySelector('.SendTradeRequest').setAttribute('data-friend', friendId)
 
         if (cache !== null && userCardsCache === cache) {
             return cache;

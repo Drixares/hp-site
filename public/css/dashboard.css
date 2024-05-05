@@ -753,11 +753,12 @@ main h2 {
 
 
 .sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox > .acceptBtn,
+.sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox > .seeTradeBtn,
 .sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox > .cancelBtn,
 .sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox > .tradeBtn,
 .searchFriendContainer__resultsBox__resultElement__btnBox > .addBtn,
 .searchFriendContainer__resultsBox__resultElement__btnBox > .acceptBtn,
-.tradeBox__btnBox > .confirmTradeBtn { 
+.tradeBox__btnBox > .SendTradeRequest { 
   border-radius: 5px;
   padding-inline: 14px;
   padding-block: 6px;
@@ -766,18 +767,20 @@ main h2 {
 }
 
 .sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox > .acceptBtn,
+.sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox > .seeTradeBtn,
 .sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox > .tradeBtn,
 .searchFriendContainer__resultsBox__resultElement__btnBox > .addBtn,
 .searchFriendContainer__resultsBox__resultElement__btnBox > .acceptBtn,
-.tradeBox__btnBox > .confirmTradeBtn {
+.tradeBox__btnBox > .SendTradeRequest {
   background-color: var(--secondary);
 }
 
 .sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox > .acceptBtn:hover,
+.sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox > .seeTradeBtn:hover,
 .sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox > .tradeBtn:hover,
 .searchFriendContainer__resultsBox__resultElement__btnBox > .addBtn:hover,
 .searchFriendContainer__resultsBox__resultElement__btnBox > .acceptBtn:hover,
-.tradeBox__btnBox > .confirmTradeBtn:hover {
+.tradeBox__btnBox > .SendTradeRequest:hover {
   background-color: var(--secondary-hover);
 }
 
@@ -803,7 +806,7 @@ main h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 34px;
+  height: 31px;
   aspect-ratio: 1;
   color: var(--blue-400);
   border: 1px solid var(--blue-400);

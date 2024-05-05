@@ -73,7 +73,7 @@ function notificationTemplate(request, direction, requestType) {
         <p class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text" data-request="${request.id}" data-name="${request.sender.name}">${request.sender.name} vous a envoyé une demande d'échange !</p>
       </div>
       <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox">
-        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox acceptBtn" data-request="${request.id}" data-type="${requestType}">See</button>
+        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox seeTradeBtn" data-request="${request.id}" data-type="${requestType}">See</button>
         <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox refuseBtn" data-request="${request.id}" data-type="${requestType}"><i class="fa-solid fa-xmark"></i></button>
       </div>
     `
