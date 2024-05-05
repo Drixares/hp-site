@@ -21,17 +21,24 @@ dateData.innerText = dateString;
 // ----------------- Click Events ----------------- //
 
 document.addEventListener('click', async (e) => {
+
+    // Booster button
     const btnBooster = e.target.closest('#openBoosterBtn');
-    const btnCancel = e.target.closest('.cancelBtn');
-    const btnAccept = e.target.closest('.acceptBtn');
-    const btnRemove = e.target.closest('.removeBtn');
-    const btnDecline = e.target.closest('.refuseBtn');
-    const btnAdd = e.target.closest('.addBtn');
+
+    // Friend request buttons
+    const btnCancel = e.target.closest('.cancelBtn[data-type="friendrequest"]');
+    const btnAccept = e.target.closest('.acceptBtn[data-type="friendrequest"]');
+    const btnRemove = e.target.closest('.removeBtn[data-type="friendrequest"]');
+    const btnDecline = e.target.closest('.refuseBtn[data-type="friendrequest"]');
+    const btnAdd = e.target.closest('.addBtn[data-type="friendrequest"]');
+
+    // Trade request buttons
     const tradeBtn = e.target.closest('.tradeBtn');
     const dropDownSelected = e.target.closest('.dropdown__selected');
     const dropDownElement = e.target.closest('.dropdown__list__element')
     const confirmTradeBtn = e.target.closest('.confirmTradeBtn');
     
+    // ----------------- Click Events ----------------- //
     if (btnBooster) {
         
         try {
@@ -265,7 +272,6 @@ document.addEventListener('click', async (e) => {
 
     } 
     
-
 })
 
 searchFriendInput.addEventListener('input', debounce(getSearchResults, 500))
@@ -556,12 +562,22 @@ function createNotifications(receivedFriendRequests, sentFriendRequests, sentTra
     
     for (friendRequestSent of sentFriendRequests) {
         if (friendRequestSent.status === 'REJECTED') continue;
-        notificationsList.appendChild(notificationTemplate(friendRequestSent, 'sent'));
+        notificationsList.appendChild(notificationTemplate(friendRequestSent, 'sent', 'friendrequest'));
     }
     
     for (friendRequestReceived of receivedFriendRequests) {
         if (friendRequestReceived.status === 'REJECTED') continue;
-        notificationsList.appendChild(notificationTemplate(friendRequestReceived, 'received'));
+        notificationsList.appendChild(notificationTemplate(friendRequestReceived, 'received', 'friendrequest'));
+    }
+
+    for (tradeRequestSent of sentTradeRequests) {
+        if (tradeRequestSent.status === 'REJECTED') continue;
+        notificationsList.appendChild(notificationTemplate(tradeRequestSent, 'sent', 'traderequest'));
+    }
+
+    for (tradeRequestReceived of receivedTradeRequests) {
+        if (tradeRequestReceived.status === 'REJECTED') continue;
+        notificationsList.appendChild(notificationTemplate(tradeRequestReceived, 'received', 'traderequest'));
     }
     
 }

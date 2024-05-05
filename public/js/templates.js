@@ -1,10 +1,19 @@
-function notificationTemplate(request, type) {
+function notificationTemplate(request, direction, requestType) {
 
   const notification = document.createElement('div');
   notification.classList.add('sliderBox__sliderContainer__notifBox__notifList__notifElement');
   notification.setAttribute('data-request', request.id);
 
-  if (type === 'received' && request.status === 'PENDING') {
+  // const requestData = {
+  //   id: request.id,
+  //   friend: request.sender?.name || request.receiver?.name,
+  //   status: request.status,
+  // }
+
+  // requestType === 'friend' ? requestData.type = 'friend' : requestData.type = 'trade';
+
+
+  if (direction === 'received' && requestType === 'friendrequest' && request.status === 'PENDING') {
     
     notification.setAttribute('data-name', request.sender.name);
 
@@ -16,11 +25,11 @@ function notificationTemplate(request, type) {
         <p class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text" data-request="${request.id}" data-name="${request.sender.name}">${request.sender.name} vous a envoyé une demande d'ami !</p>
       </div>
       <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox">
-        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox acceptBtn" data-request="${request.id}">Accept</button>
-        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox refuseBtn" data-request="${request.id}"><i class="fa-solid fa-xmark"></i></button>
+        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox acceptBtn" data-request="${request.id}" data-type="${requestType}">Accept</button>
+        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox refuseBtn" data-request="${request.id}" data-type="${requestType}"><i class="fa-solid fa-xmark"></i></button>
       </div>
     `
-  } else if (type === 'sent' && request.status === 'PENDING') {
+  } else if (direction === 'sent' && requestType === 'friendrequest' && request.status === 'PENDING') {
     notification.innerHTML = `
       <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
         <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__imgBox">
@@ -29,10 +38,10 @@ function notificationTemplate(request, type) {
         <p class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text">Demande d'ami envoyée à ${request.receiver.name}.</p>
       </div>
       <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox">
-        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox cancelBtn" data-request="${request.id}">Cancel</button>
+        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox cancelBtn" data-request="${request.id}" data-type="${requestType}">Cancel</button>
       </div>
     `
-  } else if (type === 'received' && request.status === 'ACCEPTED') {
+  } else if (direction === 'received' && requestType === 'friendrequest' && request.status === 'ACCEPTED') {
     notification.setAttribute('data-name', request.sender.name);
 
     notification.innerHTML = `
@@ -43,7 +52,7 @@ function notificationTemplate(request, type) {
         <p class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text" data-request="${request.id}" data-name="${request.sender.name}">Vous avez accepté la demande d'ami de ${request.sender.name} !</p>
       </div>
     `
-  } else if (type === 'sent' && request.status === 'ACCEPTED') {
+  } else if (direction === 'sent' && requestType === 'friendrequest' && request.status === 'ACCEPTED') {
     notification.innerHTML = `
       <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
         <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__imgBox">
@@ -52,7 +61,56 @@ function notificationTemplate(request, type) {
         <p class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text">${request.receiver.name} a accepté votre demande d'ami.</p>
       </div>
     `
+  
+  } else if (direction === 'received' && requestType === 'traderequest' && request.status === 'PENDING') {
+    notification.setAttribute('data-name', request.sender.name);
+
+    notification.innerHTML = `
+      <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
+        <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__imgBox">
+          <img src="./ressources/images/ace6549ae47649ed5ba46cc872320fba.jpg" alt="profile picture">
+        </div>
+        <p class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text" data-request="${request.id}" data-name="${request.sender.name}">${request.sender.name} vous a envoyé une demande d'échange !</p>
+      </div>
+      <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox">
+        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox acceptBtn" data-request="${request.id} data-type="${requestType}"">See</button>
+        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox refuseBtn" data-request="${request.id} data-type="${requestType}""><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    `
+  } else if (direction === 'sent' && requestType === 'traderequest' && request.status === 'PENDING') {
+    notification.innerHTML = `
+      <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
+        <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__imgBox">
+          <img src="./ressources/images/ace6549ae47649ed5ba46cc872320fba.jpg" alt="profile picture">
+        </div>
+        <p class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text">Demande d'échange envoyée à ${request.receiver.name}.</p>
+      </div>
+      <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox">
+        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox cancelBtn" data-request="${request.id}" data-type="${requestType}">Cancel</button>
+      </div>
+    `
+  } else if (direction === 'received' && requestType === 'traderequest' && request.status === 'ACCEPTED') {
+    notification.setAttribute('data-name', request.sender.name);
+
+    notification.innerHTML = `
+      <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
+        <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__imgBox">
+          <img src="./ressources/images/ace6549ae47649ed5ba46cc872320fba.jpg" alt="profile picture">
+        </div>
+        <p class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text" data-request="${request.id}" data-name="${request.sender.name}">Vous avez accepté la demande d'échange de ${request.sender.name} !</p>
+      </div>
+    `
+  } else if (direction === 'sent' && requestType === 'traderequest' && request.status === 'ACCEPTED') {
+    notification.innerHTML = `
+      <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
+        <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__imgBox">
+          <img src="./ressources/images/ace6549ae47649ed5ba46cc872320fba.jpg" alt="profile picture">
+        </div>
+        <p class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text">${request.receiver.name} a accepté votre demande d'échange.</p>
+      </div>
+    `
   }
+
 
   return notification;
 }
