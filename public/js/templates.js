@@ -73,8 +73,8 @@ function notificationTemplate(request, direction, requestType) {
         <p class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__text" data-request="${request.id}" data-name="${request.sender.name}">${request.sender.name} vous a envoyé une demande d'échange !</p>
       </div>
       <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox">
-        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox acceptBtn" data-request="${request.id} data-type="${requestType}"">See</button>
-        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox refuseBtn" data-request="${request.id} data-type="${requestType}""><i class="fa-solid fa-xmark"></i></button>
+        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox acceptBtn" data-request="${request.id}" data-type="${requestType}">See</button>
+        <button class="sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox refuseBtn" data-request="${request.id}" data-type="${requestType}"><i class="fa-solid fa-xmark"></i></button>
       </div>
     `
   } else if (direction === 'sent' && requestType === 'traderequest' && request.status === 'PENDING') {
@@ -131,8 +131,8 @@ function friendTemplate(friendData) {
           <span class="sliderBox__sliderContainer__friendBox__friendList__friendElement__name" data-friend="${friendData.sender.id}">${friendData.sender.name}</span>
         </div>
         <div class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox">
-          <button class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox tradeBtn" data-friend="${friendData.sender.id}">Trade</button>
-          <button class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox removeBtn" data-friend="${friendData.id}">Remove</button>
+          <button class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox tradeBtn" data-friend="${friendData.sender.id}" data-type="friendrequest">Trade</button>
+          <button class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox removeBtn" data-friend="${friendData.id}" data-type="friendrequest">Remove</button>
         </div>
     `
 
@@ -145,8 +145,8 @@ function friendTemplate(friendData) {
           <span class="sliderBox__sliderContainer__friendBox__friendList__friendElement__name" data-friend="${friendData.receiver.id}">${friendData.receiver.name}</span>
         </div>
         <div class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox">
-          <button class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox tradeBtn" data-friend="${friendData.receiver.id}">Trade</button>
-          <button class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox removeBtn" data-friend="${friendData.id}">Remove</button>
+          <button class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox tradeBtn" data-friend="${friendData.receiver.id}" data-type="friendrequest">Trade</button>
+          <button class="sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox removeBtn" data-friend="${friendData.id}" data-type="friendrequest">Remove</button>
         </div>
     `
   }
@@ -207,7 +207,7 @@ function createSearchResult(user) {
         <span class="searchFriendContainer__resultsBox__resultElement__name">${user.name}</span>
       </div>
       <div class="searchFriendContainer__resultsBox__resultElement__btnBox">
-        <button class="searchFriendContainer__resultsBox__resultElement__btnBox addBtn" data-user="${user.id}">Ask a friend</button>
+        <button class="searchFriendContainer__resultsBox__resultElement__btnBox addBtn" data-user="${user.id}" data-type="friendrequest" >Ask a friend</button>
       </div>
     `
 

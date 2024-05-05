@@ -22,25 +22,12 @@ dateData.innerText = dateString;
 
 document.addEventListener('click', async (e) => {
 
-    // Booster button
-    const btnBooster = e.target.closest('#openBoosterBtn');
-
-    // Friend request buttons
-    const btnCancel = e.target.closest('.cancelBtn[data-type="friendrequest"]');
-    const btnAccept = e.target.closest('.acceptBtn[data-type="friendrequest"]');
-    const btnRemove = e.target.closest('.removeBtn[data-type="friendrequest"]');
-    const btnDecline = e.target.closest('.refuseBtn[data-type="friendrequest"]');
-    const btnAdd = e.target.closest('.addBtn[data-type="friendrequest"]');
-
-    // Trade request buttons
-    const tradeBtn = e.target.closest('.tradeBtn');
-    const dropDownSelected = e.target.closest('.dropdown__selected');
-    const dropDownElement = e.target.closest('.dropdown__list__element')
-    const confirmTradeBtn = e.target.closest('.confirmTradeBtn');
+    const target = e.target;
     
-    // ----------------- Click Events ----------------- //
-    if (btnBooster) {
-        
+    if (target.matches('#openBoosterBtn')) {
+
+        // Handle booster button click
+        const OpenBooster = e.target.closest('#openBoosterBtn');
         try {
             const timerDataDynamic = document.createElement('span');
             timerDataDynamic.classList.add('timerBooster');
@@ -57,7 +44,7 @@ document.addEventListener('click', async (e) => {
             if (response.status === 200) {
                 const data = await response.json();
                 const timerMs = data.booster - Date.now();
-                btnBooster.remove();
+                OpenBooster.remove();
     
                 // ---------------- Create a new window for the booster opening ----------------- //
     
@@ -84,11 +71,14 @@ document.addEventListener('click', async (e) => {
         } catch (error) {    
             alert(error.message);
         }
-    } else if (btnCancel) {
+
+    } else if (target.matches('.cancelBtn[data-type="friendrequest"]')) {
+
+        const CancelFriendRequest = e.target.closest('.cancelBtn[data-type="friendrequest"]');
 
         try {
 
-            const response = await fetch('/users/friendRequests/cancel/' + btnCancel.dataset.request, {
+            const response = await fetch('/users/friendRequests/cancel/' + CancelFriendRequest.dataset.request, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -97,7 +87,7 @@ document.addEventListener('click', async (e) => {
             })
 
             if (response.status === 200) {
-                document.querySelector(`[data-request="${btnCancel.dataset.request}"]`).remove();
+                document.querySelector(`[data-request="${CancelFriendRequest.dataset.request}"]`).remove();
                 console.log(document.getElementById('notifList').children.length);
                 if (document.getElementById('notifList').children.length === 0) {
                     document.getElementById('notifList').innerHTML = 'No notifications'
@@ -109,11 +99,14 @@ document.addEventListener('click', async (e) => {
         } catch (error) {
             alert(error.message);
         }
-    } else if (btnAccept) {
+
+    } else if (target.matches('.acceptBtn[data-type="friendrequest"]')) {
+
+        const AcceptFriendRequest = e.target.closest('.acceptBtn[data-type="friendrequest"]');
 
         try {
             
-            const response = await fetch('/users/friendRequests/accept/' + btnAccept.dataset.request, {
+            const response = await fetch('/users/friendRequests/accept/' + AcceptFriendRequest.dataset.request, {
                 method: 'PUT',
                 headers: {
                         'Content-Type': 'application/json',
@@ -124,11 +117,11 @@ document.addEventListener('click', async (e) => {
             if (response.status === 200) {
                 const data = await response.json()
 
-                if (btnAccept.closest('.sliderBox__sliderContainer__notifBox__notifList__notifElement')) {
-                    btnAccept.closest('.sliderBox__sliderContainer__notifBox__notifList__notifElement').remove()
+                if (AcceptFriendRequest.closest('.sliderBox__sliderContainer__notifBox__notifList__notifElement')) {
+                    AcceptFriendRequest.closest('.sliderBox__sliderContainer__notifBox__notifList__notifElement').remove()
 
                 } else {
-                    document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement[data-request="${btnAccept.dataset.request}"]`).remove()
+                    document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement[data-request="${AcceptFriendRequest.dataset.request}"]`).remove()
                     getSearchResults()
                 }
 
@@ -146,10 +139,12 @@ document.addEventListener('click', async (e) => {
             alert(error.message)
         }
 
-    } else if (btnRemove) {
+    // Handle accept friend request click
+    } else if (target.matches('.removeBtn[data-type="friendrequest"]')) {
+        const RemoveFriendRequest = e.target.closest('.removeBtn[data-type="friendrequest"]');
 
         try {
-            const response = await fetch('/users/friendRequests/remove/' + btnRemove.dataset.friend, {
+            const response = await fetch('/users/friendRequests/remove/' + RemoveFriendRequest.dataset.friend, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -175,11 +170,14 @@ document.addEventListener('click', async (e) => {
         } catch (error) {
             alert(error.message);
         }
-    } else if (btnDecline) {
+
+    // Handle remove friend request click
+    } else if (target.matches('.refuseBtn[data-type="friendrequest"]')) {
+        const DeclineFriendRequest = e.target.closest('.refuseBtn[data-type="friendrequest"]');
 
         try {
             
-            const response = await fetch('/users/friendRequests/decline/' + btnDecline.dataset.request, {
+            const response = await fetch('/users/friendRequests/decline/' + DeclineFriendRequest.dataset.request, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -188,7 +186,7 @@ document.addEventListener('click', async (e) => {
             })
 
             if (response.status === 200) {
-                document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement[data-request="${btnDecline.dataset.request}"]`).remove();
+                document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement[data-request="${DeclineFriendRequest.dataset.request}"]`).remove();
                 if (document.getElementById('notifList').children.length === 0) {
                     document.getElementById('notifList').innerHTML = 'No notifications'
                 }
@@ -200,11 +198,13 @@ document.addEventListener('click', async (e) => {
             alert(error.message)
         }
 
-    } else if (btnAdd) {
+    } else if (target.matches('.addBtn[data-type="friendrequest"]')) {
+
+        const SendFriendRequest = e.target.closest('.addBtn[data-type="friendrequest"]');
 
         try {
             
-            const response = await fetch('/users/friendRequests/send/' + btnAdd.dataset.user, {
+            const response = await fetch('/users/friendRequests/send/' + SendFriendRequest.dataset.user, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -230,22 +230,32 @@ document.addEventListener('click', async (e) => {
             alert(error.message)
         }
 
-    } else if (tradeBtn) {
+    } else if (target.matches('.tradeBtn')) {
+        const tradeBtn = e.target.closest('.tradeBtn');
+
         const friendId = tradeBtn.dataset.friend;
         const friendName = document.querySelector(`.sliderBox__sliderContainer__friendBox__friendList__friendElement__name[data-friend="${tradeBtn.dataset.friend}"]`).innerText;
         
         await openTradeWindow(friendId, friendName)
 
-    } else if (dropDownSelected) {
+    } else if (target.matches('.dropdown__selected')) {
+        const dropDownSelected = e.target.closest('.dropdown__selected');
+
         // document.querySelector('.dropdown__list.active')?.classList.remove('active')
         document.querySelector(`.dropdown__list[data-dropdown="${dropDownSelected.dataset.dropdown}"]`).classList.toggle('active')
-    } else if (dropDownElement) {
+
+    } else if (target.matches('.dropdown__list__element')) {
+
+        const dropDownElement = e.target.closest('.dropdown__list__element')
+
         const cardSelected = document.querySelector(`.dropdown__selected[data-dropdown="${dropDownElement.dataset.dropdown}"]`);
         cardSelected.innerText = dropDownElement.innerText;
         cardSelected.setAttribute('data-card', `${dropDownElement.dataset.card}`)
         document.querySelector(`.dropdown__list[data-dropdown="${dropDownElement.dataset.dropdown}"]`).classList.remove('active')
-    
-    } else if (confirmTradeBtn) {
+
+    } else if (target.matches('.confirmTradeBtn')) {
+
+        const confirmTradeBtn = e.target.closest('.confirmTradeBtn');
 
         try {
             
@@ -261,16 +271,17 @@ document.addEventListener('click', async (e) => {
                     friendId: confirmTradeBtn.dataset.friend,
                 })
             })
-
+            
             if (response.status === 200) {
                 playCheckAnimation();
             }
-
+            
         } catch (error) {
             alert(error.message)
         }
-
-    } 
+        
+        
+    }
     
 })
 
@@ -727,7 +738,6 @@ function playCheckAnimation() {
         createNotifications(userData.user.receivedFriendRequests, userData.user.sentFriendRequests, userData.user.sentTradeRequests, userData.user.receivedTradeRequests);
         let friendsArray = await fetchFriends();
         createFriends(friendsArray)
-        // console.log(userCardsCache);
         
     } catch (error) {
         
