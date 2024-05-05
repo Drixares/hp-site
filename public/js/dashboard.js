@@ -46,27 +46,33 @@ document.addEventListener('click', async (e) => {
                     'authorization': `Bearer ${token}`
                 }
             })
+
+            if (response.status === 200) {
+                const data = await response.json();
+                const timerMs = data.booster - Date.now();
+                btnBooster.remove();
     
-            const data = await response.json();
-            const timerMs = data.booster - Date.now();
-            btnBooster.remove();
-
-            // ---------------- Create a new window for the booster opening ----------------- //
-
-            openBoosterWindow(data);
-
-            // ---------------- Update les données des cartes sur la page --------------------- //
-            
-            updateCardsData()
-
-            // A mettre au moment au l'utilisateur ferme la fenêtre de booster
-            updateTimer(timerMs, true);
-            if (timerMs <= 0) {
-                getBoosterBtn();
-                return;
-            } 
+                // ---------------- Create a new window for the booster opening ----------------- //
     
-            loopTimer(timerMs);   
+                openBoosterWindow(data);
+    
+                // ---------------- Update les données des cartes sur la page --------------------- //
+                
+                await updateCardsData()
+    
+                // A mettre au moment au l'utilisateur ferme la fenêtre de booster
+                updateTimer(timerMs, true);
+                if (timerMs <= 0) {
+                    getBoosterBtn();
+                    return;
+                } 
+        
+                loopTimer(timerMs);   
+                
+            } else {
+                alert('An error occured');
+            }
+    
             
         } catch (error) {    
             alert(error.message);
@@ -221,7 +227,7 @@ document.addEventListener('click', async (e) => {
         const friendId = tradeBtn.dataset.friend;
         const friendName = document.querySelector(`.sliderBox__sliderContainer__friendBox__friendList__friendElement__name[data-friend="${tradeBtn.dataset.friend}"]`).innerText;
         
-        openTradeWindow(friendId, friendName)
+        await openTradeWindow(friendId, friendName)
 
     } else if (dropDownSelected) {
         // document.querySelector('.dropdown__list.active')?.classList.remove('active')
@@ -230,6 +236,7 @@ document.addEventListener('click', async (e) => {
         const cardSelected = document.querySelector(`.dropdown__selected[data-dropdown="${dropDownElement.dataset.dropdown}"]`);
         cardSelected.innerText = dropDownElement.innerText;
         cardSelected.setAttribute('data-card', `${dropDownElement.dataset.card}`)
+        document.querySelector(`.dropdown__list[data-dropdown="${dropDownElement.dataset.dropdown}"]`).classList.remove('active')
     
     } else if (confirmTradeBtn) {
 
@@ -484,6 +491,7 @@ async function updateCardsData() {
         
         const cardsData = await responseCards.json();
         userCardsCache = cardsData;
+        console.log("Updated: ", userCardsCache);
 
         document.getElementById('cardNumberData').innerText = cardsData.numberCards;
         document.getElementById('houseNumberData').innerText = cardsData.numberHouses + ' / 4';
@@ -607,7 +615,7 @@ function createOpenTradeWindow() {
         document.querySelector('.tradeBox').classList.toggle('active');
         document.querySelector('.confirmTradeBtn').setAttribute('data-friend', friendId)
 
-        if (cache !== null) {
+        if (cache !== null && userCardsCache === cache) {
             return cache;
         }
 
@@ -638,7 +646,7 @@ function createOpenTradeWindow() {
         }
 
 
-        cache = true;
+        cache = userCardsCache;;
         return cache;
     }
 }
@@ -655,7 +663,7 @@ async function fetchAllCards() {
         
         if (response.status === 200) {
             const data = await response.json()
-            console.log(data);
+            // console.log(data);
 
             cardsCache = data
             return data
@@ -676,6 +684,7 @@ async function fetchAllCards() {
         createNotifications(userData.user.receivedFriendRequests, userData.user.sentFriendRequests, userData.user.sentTradeRequests, userData.user.receivedTradeRequests);
         let friendsArray = await fetchFriends();
         createFriends(friendsArray)
+        // console.log(userCardsCache);
         
     } catch (error) {
         
