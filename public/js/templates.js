@@ -12,10 +12,10 @@ function notificationTemplate(request, direction, requestType) {
 
   // requestType === 'friend' ? requestData.type = 'friend' : requestData.type = 'trade';
 
-
   if (direction === 'received' && requestType === 'friendrequest' && request.status === 'PENDING') {
     
     notification.setAttribute('data-name', request.sender.name);
+    notification.classList.add('friendRequestElement');
 
     notification.innerHTML = `
       <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
@@ -30,6 +30,9 @@ function notificationTemplate(request, direction, requestType) {
       </div>
     `
   } else if (direction === 'sent' && requestType === 'friendrequest' && request.status === 'PENDING') {
+    
+    notification.classList.add('friendRequestElement');
+
     notification.innerHTML = `
       <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
         <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__imgBox">
@@ -42,6 +45,9 @@ function notificationTemplate(request, direction, requestType) {
       </div>
     `
   } else if (direction === 'received' && requestType === 'friendrequest' && request.status === 'ACCEPTED') {
+
+    notification.classList.add('friendRequestElement');
+
     notification.setAttribute('data-name', request.sender.name);
 
     notification.innerHTML = `
@@ -53,6 +59,9 @@ function notificationTemplate(request, direction, requestType) {
       </div>
     `
   } else if (direction === 'sent' && requestType === 'friendrequest' && request.status === 'ACCEPTED') {
+
+    notification.classList.add('friendRequestElement');
+
     notification.innerHTML = `
       <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
         <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__imgBox">
@@ -64,6 +73,8 @@ function notificationTemplate(request, direction, requestType) {
   
   } else if (direction === 'received' && requestType === 'traderequest' && request.status === 'PENDING') {
     notification.setAttribute('data-name', request.sender.name);
+
+    notification.classList.add('tradeRequestElement');
 
     notification.innerHTML = `
       <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
@@ -78,6 +89,9 @@ function notificationTemplate(request, direction, requestType) {
       </div>
     `
   } else if (direction === 'sent' && requestType === 'traderequest' && request.status === 'PENDING') {
+
+    notification.classList.add('tradeRequestElement');
+
     notification.innerHTML = `
       <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
         <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__imgBox">
@@ -90,6 +104,9 @@ function notificationTemplate(request, direction, requestType) {
       </div>
     `
   } else if (direction === 'received' && requestType === 'traderequest' && request.status === 'ACCEPTED') {
+
+    notification.classList.add('tradeRequestElement');
+
     notification.setAttribute('data-name', request.sender.name);
 
     notification.innerHTML = `
@@ -101,6 +118,9 @@ function notificationTemplate(request, direction, requestType) {
       </div>
     `
   } else if (direction === 'sent' && requestType === 'traderequest' && request.status === 'ACCEPTED') {
+
+    notification.classList.add('tradeRequestElement');
+
     notification.innerHTML = `
       <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox" data-request="${request.id}">
         <div class="sliderBox__sliderContainer__notifBox__notifList__notifElement__infosBox__imgBox">
@@ -243,4 +263,48 @@ function createNewCard(cardData, i) {
   cardContainer.appendChild(card);
   
   return cardContainer;
+}
+
+function templateTradeInfosWindow(tradeData, cache) {
+
+  const ownsCard = cache.find(card => card.card.id === tradeData.receivedCard.id);
+  console.log(cache);
+  console.log(ownsCard);
+
+  const tradeWindow = document.createElement('div');
+  tradeWindow.classList.add('infosTradeBox');
+
+  tradeWindow.innerHTML = `
+    <div class="infosTradeBox__infosTradeContainer">
+      <div class="infosTradeBox__infosTradeContainer__mainContent">
+        <h3 class="infosTradeBox__infosTradeContainer__mainContent__title">Trade request from <span class="infosTradeBox__friendName">${tradeData.sender.name}</span></h3>
+        <div class="infosTradeBox__infosTradeContainer__mainContent__tradeBox">
+          <div class="infosTradeBox__infosTradeContainer__mainContent__tradeBox__giveBox">
+            <span>You give</span>
+            <div class="tradeElement">
+              <span class="tradeElement__name">${tradeData.receivedCard.name}</span>
+              <span class="tradeElement__number">x1</span>
+            </div>
+          </div>
+          <div class="infosTradeBox__infosTradeContainer__mainContent__tradeBox__iconBox">
+            <img src="./ressources/icons/tradeIcon.svg" alt="trade icon">
+          </div>
+          <div class="infosTradeBox__infosTradeContainer__mainContent__tradeBox__receiveBox">
+            <span>You receive</span>
+            <div class="tradeElement">
+              <span class="tradeElement__name">${tradeData.giftedCard.name}</span>
+              <span class="${ownsCard ? "tradeElement__number" : "tradeElement__number notOwned"}">${ownsCard ? "x1" : "x0"}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="infosTradeBox__infosTradeContainer__btnBox">
+        <button class="acceptTradeRequest acceptBtn" data-type="traderequest" ${ownsCard ? "" : "disabled"} data-request="${tradeData.id}">Accept</button>
+        <button class="declineTradeRequest refuseBtn" data-type="traderequest" data-request="${tradeData.id}">Decline</button>
+      </div>
+    </div>
+  `
+
+  return tradeWindow;
 }

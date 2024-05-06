@@ -742,7 +742,8 @@ main h2 {
 .sliderBox__sliderContainer__notifBox__notifList__notifElement__btnBox > button,
 .sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox > button,
 .searchFriendContainer__resultsBox__resultElement__btnBox > button,
-.tradeBox__btnBox > button {
+.tradeBox__btnBox > button,
+.infosTradeBox__infosTradeContainer__btnBox > button {
   border: none;
   outline: none;
   background: none;
@@ -758,7 +759,8 @@ main h2 {
 .sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox > .tradeBtn,
 .searchFriendContainer__resultsBox__resultElement__btnBox > .addBtn,
 .searchFriendContainer__resultsBox__resultElement__btnBox > .acceptBtn,
-.tradeBox__btnBox > .SendTradeRequest { 
+.tradeBox__btnBox > .SendTradeRequest,
+.infosTradeBox__infosTradeContainer__btnBox > .acceptTradeRequest { 
   border-radius: 5px;
   padding-inline: 14px;
   padding-block: 6px;
@@ -771,7 +773,8 @@ main h2 {
 .sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox > .tradeBtn,
 .searchFriendContainer__resultsBox__resultElement__btnBox > .addBtn,
 .searchFriendContainer__resultsBox__resultElement__btnBox > .acceptBtn,
-.tradeBox__btnBox > .SendTradeRequest {
+.tradeBox__btnBox > .SendTradeRequest,
+.infosTradeBox__infosTradeContainer__btnBox > .acceptTradeRequest {
   background-color: var(--secondary);
 }
 
@@ -780,7 +783,8 @@ main h2 {
 .sliderBox__sliderContainer__friendBox__friendList__friendElement__btnBox > .tradeBtn:hover,
 .searchFriendContainer__resultsBox__resultElement__btnBox > .addBtn:hover,
 .searchFriendContainer__resultsBox__resultElement__btnBox > .acceptBtn:hover,
-.tradeBox__btnBox > .SendTradeRequest:hover {
+.tradeBox__btnBox > .SendTradeRequest:hover,
+.infosTradeBox__infosTradeContainer__btnBox > .acceptTradeRequest:not([disabled]):hover {
   background-color: var(--secondary-hover);
 }
 
@@ -1133,6 +1137,122 @@ main h2 {
   width: 250px;
   aspect-ratio: 1;
 } 
+
+
+.infosTradeBox {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--fond-primaire);
+  border: 1px solid var(--bordure-objet);
+  border-radius: 10px;
+  color: var(--texte-primaire);
+  padding: 40px;
+  z-index: 100;
+}
+
+.infosTradeBox__infosTradeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.infosTradeBox__infosTradeContainer__mainContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+.infosTradeBox__infosTradeContainer__mainContent__title {
+  font-size: var(--h3-size);
+  font-weight: 400;
+}
+
+.infosTradeBox__friendName {
+  font-weight: 600;
+}
+
+.infosTradeBox__infosTradeContainer__mainContent__tradeBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+
+}
+
+.infosTradeBox__infosTradeContainer__mainContent__tradeBox__giveBox,
+.infosTradeBox__infosTradeContainer__mainContent__tradeBox__receiveBox {
+  width: 100%;
+  padding-inline: 20px;
+}
+
+
+
+.infosTradeBox__infosTradeContainer__mainContent__tradeBox__giveBox > * + *,
+.infosTradeBox__infosTradeContainer__mainContent__tradeBox__receiveBox > * + * {
+  margin-top: 10px;
+}
+
+.tradeElement {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 7px 20px;
+  border: 1px solid var(--bordure-objet);
+  border-radius: 5px;
+}
+
+.tradeElement__name,
+.tradeElement__number {
+  color: var(--texte-sous-texte-2);
+}
+
+.tradeElement__number.notOwned {
+  color: var(--danger-color);
+}
+
+
+.infosTradeBox__infosTradeContainer__mainContent__tradeBox__iconBox {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.infosTradeBox__infosTradeContainer__btnBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.infosTradeBox__infosTradeContainer__btnBox > .declineTradeRequest {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 14px;
+  height: 29px;
+  border: 1px solid var(--blue-400);
+  color: var(--blue-400);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.infosTradeBox__infosTradeContainer__btnBox > .declineTradeRequest:hover {
+  background-color: var(--blue-800);
+}
+
+.acceptTradeRequest[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
 
 @media (max-width: 900px) {
   .sidebar {

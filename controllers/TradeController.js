@@ -360,6 +360,52 @@ class TradeController {
     }
 
   }
+
+  async seeTradeRequest(req, res) {
+
+    try {
+      
+      const userId = req.user.data.id;
+      const { requestId } = req.params;
+
+      // verify if the request exists
+      const request =  await prisma.tradeRequest.findFirst({
+        where: {
+          id: parseInt(requestId),
+          receiverId: userId,
+        },
+        select: {
+          id: true,
+          sender: {
+            select: {
+              name: true,
+            }
+          },
+          giftedCard: {
+            select: {
+              id: true,
+              name: true,
+            }
+          },
+          receivedCard: {
+            select: {
+              id: true,
+              name: true,
+            }
+          },
+        }
+      })
+
+      if (!request) return res.status(404).json({ message: "Trade request not found." })
+
+      return res.status(200).json({ request })
+
+    } catch (error) {
+      
+      return res.status(500).json({ message: error.message })
+    }
+
+  }
 }
 
 export default new TradeController();

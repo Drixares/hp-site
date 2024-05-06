@@ -47,6 +47,7 @@ router.post('/users/tradeRequests/send', authentificationToken, TradeController.
 router.put('/users/tradeRequests/accept/:requestId', authentificationToken, TradeController.acceptTrade)
 router.delete('/users/tradeRequests/decline/:requestId', authentificationToken, TradeController.declineTrade)
 router.delete('/users/tradeRequests/cancel/:requestId', authentificationToken, TradeController.cancelTrade)
+router.get('/users/tradeRequests/:requestId', authentificationToken, TradeController.seeTradeRequest)
 
 
 let lastVisited = "Gryffindor";

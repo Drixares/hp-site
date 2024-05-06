@@ -87,7 +87,7 @@ document.addEventListener('click', async (e) => {
             })
 
             if (response.status === 200) {
-                document.querySelector(`[data-request="${CancelFriendRequest.dataset.request}"]`).remove();
+                document.querySelector(`.friendRequestElement[data-request="${CancelFriendRequest.dataset.request}"]`).remove();
                 console.log(document.getElementById('notifList').children.length);
                 if (document.getElementById('notifList').children.length === 0) {
                     document.getElementById('notifList').innerHTML = 'No notifications'
@@ -117,8 +117,8 @@ document.addEventListener('click', async (e) => {
             if (response.status === 200) {
                 const data = await response.json()
 
-                if (AcceptFriendRequest.closest('.sliderBox__sliderContainer__notifBox__notifList__notifElement')) {
-                    AcceptFriendRequest.closest('.sliderBox__sliderContainer__notifBox__notifList__notifElement').remove()
+                if (AcceptFriendRequest.closest(`.friendRequestElement[data-request="${AcceptFriendRequest.dataset.request}"]`)) {
+                    AcceptFriendRequest.closest(`.friendRequestElement[data-request="${AcceptFriendRequest.dataset.request}"]`).remove()
 
                 } else {
                     document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement[data-request="${AcceptFriendRequest.dataset.request}"]`).remove()
@@ -186,7 +186,7 @@ document.addEventListener('click', async (e) => {
             })
 
             if (response.status === 200) {
-                document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement[data-request="${DeclineFriendRequest.dataset.request}"]`).remove();
+                document.querySelector(`.friendRequestElement[data-request="${DeclineFriendRequest.dataset.request}"]`).remove();
                 if (document.getElementById('notifList').children.length === 0) {
                     document.getElementById('notifList').innerHTML = 'No notifications'
                 }
@@ -276,6 +276,7 @@ document.addEventListener('click', async (e) => {
                 const data = await response.json();
                 playCheckAnimation();
                 createNotifications([], [], [data.tradeRequest], [])
+                await updateCardsData()
             }
             
         } catch (error) {
@@ -298,7 +299,8 @@ document.addEventListener('click', async (e) => {
             })
 
             if (response.status === 200) {
-                document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement[data-request="${cancelTradeBtn.dataset.request}"]`).remove();
+                document.querySelector(`.tradeRequestElement[data-request="${cancelTradeBtn.dataset.request}"]`).remove();
+                await updateCardsData()
                 if (document.getElementById('notifList').children.length === 0) {
                     document.getElementById('notifList').innerHTML = 'No notifications'
                 }
@@ -312,7 +314,7 @@ document.addEventListener('click', async (e) => {
         }
 
 
-    } else if (target.matches('.acceptBtn[data-type="traderequest"]')) {
+    } else if (target.matches('.acceptBtn[data-type="traderequest"]')) { 
 
         try {
             
@@ -328,6 +330,12 @@ document.addEventListener('click', async (e) => {
 
             if (response.status === 200) {
                 // A compléter  
+                if (document.querySelector('.infosTradeBox')) {
+                    document.querySelector('.infosTradeBox').remove();
+                    filter.classList.remove('active');
+                    await updateCardsData()
+                }
+
             } else {
                 alert('An error occured');
             }
@@ -351,7 +359,12 @@ document.addEventListener('click', async (e) => {
             })
 
             if (response.status === 200) {
-                document.querySelector(`.sliderBox__sliderContainer__notifBox__notifList__notifElement[data-request="${removeTradeBtn.dataset.request}"]`).remove();
+                document.querySelector(`.tradeRequestElement[data-request="${removeTradeBtn.dataset.request}"]`).remove();
+                if (document.querySelector('.infosTradeBox')) {
+                    document.querySelector('.infosTradeBox').remove();
+                    filter.classList.remove('active');
+                }
+
                 if (document.getElementById('notifList').children.length === 0) {
                     document.getElementById('notifList').innerHTML = 'No notifications'
                 }
@@ -364,7 +377,31 @@ document.addEventListener('click', async (e) => {
             alert(error.message)
         }
 
-    } else if (target.matches('.seeTradeBtn[data-type="traderequest"]')) {}
+    } else if (target.matches('.seeTradeBtn[data-type="traderequest"]')) {
+
+        try {
+            
+            const seeTradeBtn = e.target.closest('.seeTradeBtn[data-type="traderequest"]');
+
+            const tradeRequest = await fetch('/users/tradeRequests/' + seeTradeBtn.dataset.request, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${token}`
+                }
+            })
+
+            if (tradeRequest.status === 200) {
+                const tradeData = await tradeRequest.json();
+                createTradeInfosWindow(tradeData.request)
+            }
+
+        } catch (error) {
+            
+            alert(error.message)
+        }
+
+    }
     
 })
 
@@ -455,8 +492,10 @@ filter.addEventListener('click', () => {
         // console.log(newUrl);
         window.history.replaceState({}, '', newUrl)
         
-    } else {
-        document.querySelector('.tradeBox.active')?.classList.remove('active');
+    } else if( document.querySelector('.tradeBox.active')) {
+        document.querySelector('.tradeBox.active').classList.remove('active');
+    } else if (document.querySelector('.infosTradeBox')) {
+        document.querySelector('.infosTradeBox').remove();
     }
     
     document.querySelector('.filter').classList.remove('active');
@@ -588,12 +627,17 @@ async function updateCardsData() {
             }
         })
         
-        const cardsData = await responseCards.json();
-        userCardsCache = cardsData;
-        console.log("Updated: ", userCardsCache);
+        if (responseCards.status === 200) {
+            const cardsData = await responseCards.json();
 
-        document.getElementById('cardNumberData').innerText = cardsData.numberCards;
-        document.getElementById('houseNumberData').innerText = cardsData.numberHouses + ' / 4';
+            userCardsCache.numberCards !== cardsData.numberCards ? 
+                document.getElementById('cardNumberData').innerText = cardsData.numberCards : null;
+            userCardsCache.numberHouses !== cardsData.numberCards ? 
+                document.getElementById('houseNumberData').innerText = cardsData.numberHouses + ' / 4' : null;
+            
+            userCardsCache = cardsData;
+        }
+
 
     } catch (error) {
         alert(error.message)
@@ -760,6 +804,11 @@ function createOpenTradeWindow() {
     }
 }
 
+function createTradeInfosWindow(tradeData) {
+    document.querySelector('.filter').classList.toggle('active');
+    document.getElementById('wrapper').appendChild(templateTradeInfosWindow(tradeData, userCardsCache.cards))
+}
+
 async function fetchAllCards() {
 
     if (cardsCache !== null) {
@@ -804,7 +853,7 @@ function playCheckAnimation() {
 
     player.addEventListener('complete', () => {
         setTimeout(() => {
-            player.remove();
+            playerBg.remove();
             tradeBox.classList.remove('active');
             filter.classList.remove('active');
         }, 500);

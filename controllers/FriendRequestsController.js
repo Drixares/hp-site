@@ -214,34 +214,54 @@ class FriendRequestsController {
       const { requestId } = req.params;
       const userId = req.user.data.id;
 
-      const link = await prisma.friendRequest.deleteMany({
+      // Verify if the friend exists
+      const friend = await prisma.friendRequest.findFirst({
+        where: {
+          AND: [
+            { id: parseInt(requestId) },
+            { OR: [
+              { senderId: userId },
+              { receiverId: userId }
+            ]},
+            { status: FriendRequestStatus.ACCEPTED }
+          ]
+        },
+        select: {
+          id: true,
+          senderId: true,
+          receiverId: true
+        }
+      })
+
+      if (!friend) return res.status(404).json({ message: 'Friend not found.' })
+
+      // Delete the friend
+      await prisma.friendRequest.delete({
+        where: {
+          id: parseInt(requestId)
+        }
+      })
+
+      // Delete all trade requests between the two users
+      await prisma.tradeRequest.deleteMany({
         where: {
           OR: [
-          {
-            AND: [
-              { id: parseInt(requestId) },
-              { receiverId: userId },
-              { status: 'ACCEPTED' }
-            ]
-          },
-          {
-            AND: [
-              { id: parseInt(requestId) },
-              { senderId: userId },
-              { status: 'ACCEPTED' }
-            ]
-          }
+            { senderId: friend.senderId, receiverId: friend.receiverId },
+            { senderId: friend.receiverId, receiverId: friend.senderId }
           ]
         }
-      });
+      })
 
-      if (!link) return res.status(404).json({ message: 'Friend not found.' })
 
       return res.status(200).json({ message: 'Friend successfully removed.' })
 
     } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+        return res.status(404).json({ message: 'Friend not found.' })
+      } else {
+        return res.status(500).json({ message: error.message });
+      }
       
-      return res.status(500).json({ message: error.message });
     }
 
   }

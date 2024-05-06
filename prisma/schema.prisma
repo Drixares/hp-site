@@ -13,7 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
   id    String     @id 
   email String  @unique
@@ -55,7 +54,8 @@ model TradeRequest {
   giftedCardId   Int
   receivedCardId Int
 
-
+  giftedCard   Card   @relation("GiftedCard", fields: [giftedCardId], references: [id])
+  receivedCard Card   @relation("ReceivedCard", fields: [receivedCardId], references: [id])
   sender       User   @relation("TradeRequestsSent", fields: [senderId], references: [id])
   receiver     User   @relation("TradeRequestsReceived", fields: [receiverId], references: [id])
 }
@@ -70,6 +70,8 @@ model Card {
   actor   String
   image  String?
   users    UserCard[]
+  giftedCard  TradeRequest[] @relation("GiftedCard")
+  receivedCard  TradeRequest[] @relation("ReceivedCard")
 }
 
 model UserCard {
