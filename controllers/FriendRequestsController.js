@@ -1,4 +1,4 @@
-import { FriendRequestStatus, Prisma } from "@prisma/client";
+import { FriendRequestStatus, Prisma, TradeRequestStatus } from "@prisma/client";
 import prisma from "../config/prisma.js";
 
 class FriendRequestsController {
@@ -242,16 +242,61 @@ class FriendRequestsController {
         }
       })
 
-      // Delete all trade requests between the two users
-      await prisma.tradeRequest.deleteMany({
+      // Looking for the trade request to delete
+      const tradeToDelete = await prisma.tradeRequest.findFirst({
         where: {
           OR: [
-            { senderId: friend.senderId, receiverId: friend.receiverId },
-            { senderId: friend.receiverId, receiverId: friend.senderId }
+            { senderId: friend.senderId, receiverId: friend.receiverId, status: TradeRequestStatus.PENDING},
+            { senderId: friend.receiverId, receiverId: friend.senderId, status: TradeRequestStatus.PENDING}
           ]
+        },
+        select: {
+          id: true,
+          senderId: true,
+          giftedCardId: true,
         }
       })
 
+      // Delete the trade request
+      const tradeDeleted = await prisma.tradeRequest.delete({
+        where: {
+          id: tradeToDelete.id
+        },
+      })
+
+      // Give the card back to the sender
+      const hasCard = await prisma.userCard.findUnique({
+        where: {
+          userId_cardId: {
+            userId: tradeToDelete.senderId,
+            cardId: tradeToDelete.giftedCardId
+          }
+        }
+      })
+
+      if (!hasCard) {
+        await prisma.userCard.create({
+          data: {
+            userId: tradeToDelete.senderId,
+            cardId: tradeToDelete.giftedCardId
+          }
+        })
+
+      } else {
+        await prisma.userCard.update({
+          where: {
+            userId_cardId: {
+              userId: tradeToDelete.senderId,
+              cardId: tradeToDelete.giftedCardId
+            }
+          },
+          data: {
+            quantity: {
+              increment: 1
+            }
+          }
+        })
+      }
 
       return res.status(200).json({ message: 'Friend successfully removed.' })
 

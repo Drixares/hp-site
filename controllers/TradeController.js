@@ -10,6 +10,8 @@ class TradeController {
       
       const { friendId, requestedCard, giftCard} = req.body;
       const userId = req.user.data.id;
+
+      if (!friendId || !requestedCard || !giftCard) return res.status(400).json({ message: "Missing required fields." })
       
       // verify if the user owns the card
       const hasCard = await prisma.userCard.findFirst({

@@ -152,19 +152,26 @@ document.addEventListener('click', async (e) => {
                 }
             })
 
-            const data = await response.json()
-
+            
             if (response.status === 200) {
+                // const data = await response.json()
                 // Refresh the friends list
                 friendsArray = await fetchFriends();
                 createFriends(friendsArray)
+                
+                document.querySelectorAll('.tradeRequestElement').forEach(tradeNotif => {
+                    if (tradeNotif.dataset.name === RemoveFriendRequest.dataset.friend) {
+                        tradeNotif.remove();
+                    }
+                })
 
                 if (document.getElementById('friendList').children.length === 0) {
                     document.getElementById('friendList').innerHTML = 'No friends'
                 }
 
+
             } else {
-                alert('An error occured');
+                alert((await response.json()).message);
             }
 
         } catch (error) {
@@ -258,6 +265,17 @@ document.addEventListener('click', async (e) => {
         const SendTradeRequest = e.target.closest('.SendTradeRequest');
 
         try {
+
+            const sendData = {
+                giftCard: document.querySelector('.dropdown__selected[data-dropdown="give"]').dataset.card,
+                requestedCard: document.querySelector('.dropdown__selected[data-dropdown="receive"]').dataset.card,
+                friendId: SendTradeRequest.dataset.friend,
+            }
+
+            if (!sendData.giftCard || !sendData.requestedCard) {
+                alert('Please select a card to give and a card to receive')
+                return;
+            }
             
             const response = await fetch('/users/tradeRequests/send', {
                 method: 'POST',
@@ -266,9 +284,9 @@ document.addEventListener('click', async (e) => {
                     'authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    giftCard: document.querySelector('.dropdown__selected[data-dropdown="give"]').dataset.card,
-                    requestedCard: document.querySelector('.dropdown__selected[data-dropdown="receive"]').dataset.card,
-                    friendId: SendTradeRequest.dataset.friend,
+                    giftCard: sendData.giftCard,
+                    requestedCard: sendData.requestedCard,
+                    friendId: sendData.friendId,
                 })
             })
             
@@ -379,27 +397,7 @@ document.addEventListener('click', async (e) => {
 
     } else if (target.matches('.seeTradeBtn[data-type="traderequest"]')) {
 
-        try {
-            
-            const seeTradeBtn = e.target.closest('.seeTradeBtn[data-type="traderequest"]');
-
-            const tradeRequest = await fetch('/users/tradeRequests/' + seeTradeBtn.dataset.request, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': `Bearer ${token}`
-                }
-            })
-
-            if (tradeRequest.status === 200) {
-                const tradeData = await tradeRequest.json();
-                createTradeInfosWindow(tradeData.request)
-            }
-
-        } catch (error) {
-            
-            alert(error.message)
-        }
+        openTradeInfosWindow(e.target)
 
     }
     
@@ -804,9 +802,51 @@ function createOpenTradeWindow() {
     }
 }
 
-function createTradeInfosWindow(tradeData) {
-    document.querySelector('.filter').classList.toggle('active');
-    document.getElementById('wrapper').appendChild(templateTradeInfosWindow(tradeData, userCardsCache.cards))
+function createTradeInfosWindow() {
+    let cache = {};
+
+    return async function TradeInfosWindow(target) {
+
+
+        // Check if the tradeData is already in the cache
+        if (cache[target.dataset.request]) {
+            document.querySelector('.filter').classList.toggle('active');
+            document.getElementById('wrapper').appendChild(templateTradeInfosWindow(cache[target.dataset.request], userCardsCache.cards))
+            return;
+
+        // If not, fetch the data from the server
+        } else {
+
+            try {
+            
+                const seeTradeBtn = target.closest('.seeTradeBtn[data-type="traderequest"]');
+    
+                const tradeRequest = await fetch('/users/tradeRequests/' + seeTradeBtn.dataset.request, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': `Bearer ${token}`
+                    }
+                })
+    
+                // If the request is successful, update the cache and append the template to the page
+                if (tradeRequest.status === 200) {
+                    const tradeData = await tradeRequest.json();
+                    
+                    const key = tradeData.request.id;
+                    cache[key] = tradeData.request;
+                    
+                    console.log(cache);
+                    document.querySelector('.filter').classList.toggle('active');
+                    document.getElementById('wrapper').appendChild(templateTradeInfosWindow(cache[tradeData.request.id], userCardsCache.cards))
+                }
+    
+            } catch (error) {
+                
+                alert(error.message)
+            }
+        }
+    }
 }
 
 async function fetchAllCards() {
@@ -880,3 +920,4 @@ function playCheckAnimation() {
 })();
 
 const openTradeWindow = createOpenTradeWindow();
+const openTradeInfosWindow = createTradeInfosWindow();

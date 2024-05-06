@@ -268,8 +268,6 @@ function createNewCard(cardData, i) {
 function templateTradeInfosWindow(tradeData, cache) {
 
   const ownsCard = cache.find(card => card.card.id === tradeData.receivedCard.id);
-  console.log(cache);
-  console.log(ownsCard);
 
   const tradeWindow = document.createElement('div');
   tradeWindow.classList.add('infosTradeBox');
