@@ -360,6 +360,7 @@ document.addEventListener('click', async (e) => {
 
         } catch (error) {
             
+            alert(error.message)
         }
 
     } else if (target.matches('.refuseBtn[data-type="traderequest"]')) {

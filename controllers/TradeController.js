@@ -172,8 +172,10 @@ class TradeController {
       } else {
         const updateCardQuantity = await prisma.userCard.update({
           where: {
-            userId: userId,
-            cardId: tradeRequest.receivedCardId,
+            userId_cardId: {
+              userId: userId,
+              cardId: tradeRequest.receivedCardId,
+            }
           },
           data: {
             quantity: {

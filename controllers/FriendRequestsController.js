@@ -258,7 +258,7 @@ class FriendRequestsController {
       })
 
       // Delete the trade request
-      const tradeDeleted = await prisma.tradeRequest.delete({
+      await prisma.tradeRequest.delete({
         where: {
           id: tradeToDelete.id
         },
