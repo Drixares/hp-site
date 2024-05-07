@@ -3,7 +3,7 @@
 }
 
 .cardsBox__title {
-  font-size: var(--h3-size);
+  font-size: var(--h2-size);
   color: var(--texte-primaire);
 }
 

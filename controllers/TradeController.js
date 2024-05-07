@@ -235,8 +235,6 @@ class TradeController {
         }
       })
 
-      console.log(receiverHasReceivedCard);
-
       // Update RECEIVER card
       if (receiverHasReceivedCard) {
         await prisma.userCard.update({
@@ -253,8 +251,6 @@ class TradeController {
           }
         })
 
-        console.log('incremented');
-
       } else {
         await prisma.userCard.create({
           data: {
@@ -264,7 +260,6 @@ class TradeController {
           }
         })
 
-        console.log('created');
       }
 
       // update trade request status
