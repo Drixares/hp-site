@@ -189,6 +189,41 @@ class CardsController {
 
   }
 
+  async showUserCollection(req, res) {
+
+    
+    try {
+
+      const userId = req.user.data.id;
+      
+      const usersCards = await prisma.userCard.findMany({
+        where: {
+          userId: userId,
+        },
+        select: {
+          card: {
+            select: {
+              id: true,
+              name: true,
+              house: true,
+              image: true
+            }
+          },
+          quantity: true
+        }
+      })
+
+      if (!usersCards) return res.status(404).json({ message: 'Not cards found' })
+
+      return res.status(200).json(usersCards)
+
+    } catch (error) {
+      
+      return res.status(500).json({ message: error.message })
+    }
+
+  }
+
 }
 
 export default new CardsController();

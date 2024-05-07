@@ -233,6 +233,8 @@ class FriendRequestsController {
         }
       })
 
+      console.log("test1");
+
       if (!friend) return res.status(404).json({ message: 'Friend not found.' })
 
       // Delete the friend
@@ -241,6 +243,9 @@ class FriendRequestsController {
           id: parseInt(requestId)
         }
       })
+
+      console.log("test2");
+
 
       // Looking for the trade request to delete
       const tradeToDelete = await prisma.tradeRequest.findFirst({
@@ -257,46 +262,50 @@ class FriendRequestsController {
         }
       })
 
-      // Delete the trade request
-      await prisma.tradeRequest.delete({
-        where: {
-          id: tradeToDelete.id
-        },
-      })
-
-      // Give the card back to the sender
-      const hasCard = await prisma.userCard.findUnique({
-        where: {
-          userId_cardId: {
-            userId: tradeToDelete.senderId,
-            cardId: tradeToDelete.giftedCardId
-          }
-        }
-      })
-
-      if (!hasCard) {
-        await prisma.userCard.create({
-          data: {
-            userId: tradeToDelete.senderId,
-            cardId: tradeToDelete.giftedCardId
-          }
+      if (tradeToDelete) {
+        // Delete the trade request
+        await prisma.tradeRequest.delete({
+          where: {
+            id: tradeToDelete.id
+          },
         })
 
-      } else {
-        await prisma.userCard.update({
+        // Give the card back to the sender
+        const hasCard = await prisma.userCard.findUnique({
           where: {
             userId_cardId: {
               userId: tradeToDelete.senderId,
               cardId: tradeToDelete.giftedCardId
             }
-          },
-          data: {
-            quantity: {
-              increment: 1
-            }
           }
         })
+  
+        if (!hasCard) {
+          await prisma.userCard.create({
+            data: {
+              userId: tradeToDelete.senderId,
+              cardId: tradeToDelete.giftedCardId
+            }
+          })
+  
+        } else {
+          await prisma.userCard.update({
+            where: {
+              userId_cardId: {
+                userId: tradeToDelete.senderId,
+                cardId: tradeToDelete.giftedCardId
+              }
+            },
+            data: {
+              quantity: {
+                increment: 1
+              }
+            }
+          })
+          
+        }
       }
+
 
       return res.status(200).json({ message: 'Friend successfully removed.' })
 

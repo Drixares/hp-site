@@ -157,13 +157,17 @@ document.addEventListener('click', async (e) => {
                 // const data = await response.json()
                 // Refresh the friends list
                 friendsArray = await fetchFriends();
+                console.log("test1");
                 createFriends(friendsArray)
+                console.log("test2");
                 
                 document.querySelectorAll('.tradeRequestElement').forEach(tradeNotif => {
                     if (tradeNotif.dataset.name === RemoveFriendRequest.dataset.friend) {
                         tradeNotif.remove();
                     }
                 })
+
+                console.log("test3");
 
                 if (document.getElementById('friendList').children.length === 0) {
                     document.getElementById('friendList').innerHTML = 'No friends'
@@ -175,7 +179,7 @@ document.addEventListener('click', async (e) => {
             }
 
         } catch (error) {
-            alert(error.message);
+            alert('An error occured');
         }
 
     // Handle remove friend request click
@@ -629,10 +633,12 @@ async function updateCardsData() {
         if (responseCards.status === 200) {
             const cardsData = await responseCards.json();
 
-            userCardsCache.numberCards !== cardsData.numberCards ? 
-                document.getElementById('cardNumberData').innerText = cardsData.numberCards : null;
-            userCardsCache.numberHouses !== cardsData.numberCards ? 
-                document.getElementById('houseNumberData').innerText = cardsData.numberHouses + ' / 4' : null;
+            if (cardNumberData) {
+                userCardsCache.numberCards !== cardsData.numberCards ? 
+                    document.getElementById('cardNumberData').innerText = cardsData.numberCards : null;
+                userCardsCache.numberHouses !== cardsData.numberCards ? 
+                    document.getElementById('houseNumberData').innerText = cardsData.numberHouses + ' / 4' : null;
+            }
             
             userCardsCache = cardsData;
         }
@@ -733,7 +739,9 @@ function createFriends(friendsArray) {
         friendsList.appendChild(friendTemplate(friendData));
     }
 
-    document.getElementById('friendNumberData').innerText = friendsArray.length;
+    if (document.getElementById('friendNumberData')) {
+        document.getElementById('friendNumberData').innerText = friendsArray.length;
+    }
 }
 
 async function fetchFriends() {
@@ -902,23 +910,82 @@ function playCheckAnimation() {
 }
 
 
+async function createCards(cardsData) {
+
+    const cardsContainer = document.getElementById('cardsContainer');
+  
+    cardsData.forEach((card, i) => {
+      cardsContainer.appendChild(createCardCollection(card, i));
+    });
+  
+  }
+  
+async function fetchUsersCards() {
+
+    let cache = null;
+
+    return async function fetchCards() {
+
+    if (cache !== null) {
+        return cache;
+    }
+
+    try {
+        
+        const response = await fetch('/users/collection', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${token}`
+        }
+        })
+
+        if (response.ok) {
+        const cards = await response.json();
+        return cards
+        }
+
+        return null;
+
+    } catch (error) {
+        
+        alert(error.message)
+    }
+    }
+
+}
+
 // Fetch data from the server and update the profile at the loading of the page
 (async () => {
 
     try {
+
+        // fetch only on the user's profile page 
         const { userData, cardsData } = await fetchData();
-        updateProfile(userData, cardsData);
+        if (cardNumberData) {
+            updateProfile(userData, cardsData);
+        }
+
+        // fetch only on the user's collection page   
+        if (document.getElementById('cardsContainer')) {
+            // fetching the cards
+            const fetchCards = await fetchUsersCards();
+            const cards = await fetchCards();
+            createCards(cards);
+        }
+        
+        // always fetch
         createNotifications(userData.user.receivedFriendRequests, userData.user.sentFriendRequests, userData.user.sentTradeRequests, userData.user.receivedTradeRequests);
         let friendsArray = await fetchFriends();
         createFriends(friendsArray)
-        
+
     } catch (error) {
         
         alert(error.message)
         
     }
     
-})();
-
-const openTradeWindow = createOpenTradeWindow();
-const openTradeInfosWindow = createTradeInfosWindow();
+  })();
+  
+  const openTradeWindow = createOpenTradeWindow();
+  const openTradeInfosWindow = createTradeInfosWindow();

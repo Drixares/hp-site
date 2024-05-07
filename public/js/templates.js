@@ -236,8 +236,10 @@ function createSearchResult(user) {
   return result;
 }
 
-
 function createNewCard(cardData, i) {
+
+  console.log(cardData);
+
   const cardContainer = document.createElement('div');
   cardContainer.classList.add('boosterWindow__cardsBox__cardContainer');
   cardContainer.style.setProperty('--delay', i);
@@ -264,6 +266,26 @@ function createNewCard(cardData, i) {
   
   return cardContainer;
 }
+
+function createCardCollection(cardData, i) {
+
+  const cardElement = document.createElement('div');
+  cardElement.classList.add('cardsBox__cardsContainer__card');
+
+  cardElement.innerHTML = `
+  <div class="cardsBox__cardsContainer__card__imgBox">
+      <span class="cardsBox__cardsContainer__card__quantity" >x${cardData.quantity}</span>
+      <img src="${cardData.card.image}" alt="" srcset="">
+    </div>
+    <div class="cardsBox__cardsContainer__card__textBox">
+      <span class="cardsBox__cardsContainer__card__textBox__name">${cardData.card.name}</span>
+    </div>
+  `
+
+  return cardElement;
+}
+
+
 
 function templateTradeInfosWindow(tradeData, cache) {
 

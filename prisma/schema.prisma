@@ -62,10 +62,10 @@ model TradeRequest {
 
 model Card {
   id        Int     @id @default(autoincrement())
-  name     String
-  species String
-  gender  String
-  house   String?
+  name      String
+  species   String
+  gender    String
+  house     String?
   dateOfBirth String?
   actor   String
   image  String?
@@ -78,6 +78,7 @@ model UserCard {
   userId String
   cardId Int
   quantity Int @default(1)
+  favorite Boolean @default(false)
   user   User @relation(fields: [userId], references: [id])
   card   Card @relation(fields: [cardId], references: [id])
 

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./css/main.css">
   <link rel="stylesheet" href="./css/dashboard.css">
+  <link rel="stylesheet" href="./css/dashboard.cards.css">
   <script>
     const token = localStorage.getItem('token');
 
@@ -17,6 +18,7 @@
   <title>Document</title>
 </head>
 <body>
+
   <div class="wrapper" id="wrapper">
   
     <nav class="sidebar">
@@ -27,8 +29,8 @@
         <div class="navContainer">
           <span class="infos-menu">Dashboard</span>
           <ul>
-            <li><a href="/dashboard" data-active="true">Dashboard</a></li>
-            <li><a href="/dashboard.collection" data-active="false">Your cards</a></li>
+            <li><a href="/dashboard" data-active="false">Dashboard</a></li>
+            <li><a href="/dashboard.collection" data-active="true">Your cards</a></li>
             <li><a href="" data-active="false">Help</a></li>
             <li><a href="" data-active="false">Settings</a></li>
           </ul>
@@ -85,32 +87,15 @@
           
       </header>
       <main>
-        <div class="profileDashboardBox accountStatsBox">
-          <div class="profileDashboardContainer accountStatsContainer">
-            <h2>Account Stats</h2>
-            <div class="statBox">
-              <div class="statItem cards">
-                <span class="statItem__number" id="cardNumberData"></span>
-                <span class="statItem__name">Cards</span>
-              </div>
-              <div class="statItem">
-                <span class="statItem__number" id="houseNumberData"></span>
-                <span class="statItem__name">Houses</span>
-              </div>
-              <div class="statItem">
-                <span class="statItem__number" id="friendNumberData"></span>
-                <span class="statItem__name">Friends</span>
-              </div>
-            </div>
-          </div>
+
+        <div class="cardsBox">
+          <h3 class="cardsBox__title">Your collection</h3>
+          <div class="cardsBox__cardsContainer" id="cardsContainer"></div>
         </div>
-        <div class="profileDashboardBox">
-          <div class="profileDashboardContainer profileDashboardBox__boosterBox">
-            <h2>Booster available in </h2>
-            <span class="timerBooster"></span>
-          </div>
-        </div>
+
+
         
+        <!--------------  ABOSULTE ELEMENTS  -------------->
         <div class="sliderBox">
           <div class="sliderBox__sliderContainer">
             <div class="sliderBox__sliderContainer__notifBox">
@@ -128,6 +113,7 @@
 
           </div>
         </div>
+        <!-- ---------------------------------------------- -->
 
       </main>
 
@@ -165,14 +151,12 @@
         </div>
       </div>
 
-
-
       <div class="filter"></div>
     </div>
   </div>
   
-  <script src="./js/dashboard.js"></script>
   <script src="./js/templates.js"></script>
+  <script src="./js/dashboard.js"></script>
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
 </body>

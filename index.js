@@ -11,7 +11,7 @@ app.use(express.static('public'));
 
 
 app.get('/:file', (req, res) => {
-  res.sendFile(req.params.file + '.html', { root: 'public' });
+  return res.sendFile(req.params.file + '.html', { root: 'public' });
 })
 
 const port = process.env.PORT || 3000;

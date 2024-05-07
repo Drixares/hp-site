@@ -146,7 +146,7 @@ class TradeController {
       // verify if the user owns the card
       const hasCard = await prisma.userCard.findFirst({
         where: {
-          userId,
+          userId: userId,
           cardId: tradeRequest.receivedCardId,
         },
         select: {
@@ -157,6 +157,7 @@ class TradeController {
       if (!hasCard) return res.status(404).json({ message: "You don't own the card." })
       const hasOneCard = hasCard.quantity > 1 ? false : true
 
+      // If he has one card, delete it, else decrement the quantity
       if (hasOneCard) {
         const deletecard = await prisma.userCard.delete({
           where: {
@@ -185,6 +186,85 @@ class TradeController {
         })
         
         if (!updateCardQuantity) return res.status(500).json({ message: "An error occured while sending the request." })
+      }
+
+      // Verify if the friend owns the card
+      const senderHasReceivedCard = await prisma.userCard.findFirst({
+        where: {
+          userId: tradeRequest.senderId,
+          cardId: tradeRequest.receivedCardId,
+        },
+        select: {
+          quantity: true
+        }
+      })
+
+      // Update SENDER card 
+      if (senderHasReceivedCard) {
+        await prisma.userCard.update({
+          where: {
+            userId_cardId: {
+              userId: tradeRequest.senderId,
+              cardId: tradeRequest.receivedCardId,
+            }
+          },
+          data: {
+            quantity: {
+              increment: 1,
+            }
+          }
+        })
+      } else {
+        await prisma.userCard.create({
+          data: {
+            userId: tradeRequest.senderId,
+            cardId: tradeRequest.receivedCardId,
+            quantity: 1
+          }
+        })
+      }
+
+      // Verify if the receiver owns the card
+      const receiverHasReceivedCard = await prisma.userCard.findFirst({
+        where: {
+          userId: tradeRequest.receiverId,
+          cardId: tradeRequest.giftedCardId,
+        },
+        select: {
+          quantity: true
+        }
+      })
+
+      console.log(receiverHasReceivedCard);
+
+      // Update RECEIVER card
+      if (receiverHasReceivedCard) {
+        await prisma.userCard.update({
+          where: {
+            userId_cardId: {
+              userId: tradeRequest.receiverId,
+              cardId: tradeRequest.giftedCardId,
+            },
+          },
+          data: {
+            quantity: {
+              increment: 1,
+            }
+          }
+        })
+
+        console.log('incremented');
+
+      } else {
+        await prisma.userCard.create({
+          data: {
+            userId: tradeRequest.receiverId,
+            cardId: tradeRequest.giftedCardId,
+            quantity: 1
+          }
+        })
+
+        console.log('created');
       }
 
       // update trade request status

@@ -22,6 +22,7 @@ router.get('/users/getUser', authentificationToken, AuthentificationController.g
 router.get('/cards', CardsController.index)
 router.get('/cards/:id', CardsController.show)
 router.post('/cards/create', CardsController.store)
+router.get('/users/collection', authentificationToken, CardsController.showUserCollection)
 
 // Récupération des cartes d'un utilisateur, ajout d'une carte à un utilisateur, suppression d'une carte d'un utilisateur
 router.get('/users/cards/show', authentificationToken, CardsController.showUserCards)
