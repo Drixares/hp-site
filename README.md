@@ -1,22 +1,16 @@
-# Projet d'axe CDI : Site d'échange de cartes Harry Potter
+# Final project A1: Harry Potter Website
 
-## Consignes :
+## Fonctionnalities :
 
-1. Site entièrement responsive. ✅
-2. Thème light/dark. ✅
-3. Code source valide sur : https://jigsaw.w3.org/css-validator/#validate_by_input
-4. Sidenav au format mobile ✅
-5. Popup modal en bas à droite du site pour formulaire d'échange. ✅
-6. Adresse mail de l'input de connexion dans le localstorage. ✅
-7. Recherche dynamique dans la page collection. ✅
-8. Détails de la carte sur son url "/cartes/:id" ou "/cartes?id=:id" accessible en cliquant sur la carte ✅
+1. Pages Home, Collection and Card (without auth needed)
+2. Signup / Login
+3. Dashbord (account stats : friends, number of cards, number of houses, your collection...)
+4. Open 1 booster every 24h (5 cards)
+5. Friend request system (search, add, remove, cancel, decline)
+6. Trade request system (only with friends)
 
-Pour les cartes :
 
-- Bouton de favoris (coeur)
-- Fitre par maison dans la page "Collection". ✅
-
-## Outils :
+## Tools :
 - Nodejs / Express
 - Prisma
 - Vinejs
