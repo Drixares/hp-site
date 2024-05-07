@@ -1,55 +1,20 @@
 import express from 'express';
-import AuthentificationController from '../controllers/AuthentificationController.js';
-import BoosterController from '../controllers/BoosterController.js';
-import CardsController from '../controllers/CardsController.js';
-import FriendRequestsController from '../controllers/FriendRequestsController.js';
-import TradeController from '../controllers/TradeController.js';
-import UsersController from '../controllers/UsersController.js';
-import { authentificationToken } from '../middlewares/Auth.js';
+import boosterRouter from './Booster.route.js';
+import cardsRouter from './Cards.route.js';
+import friendsRouter from './Friends.route.js';
+import tradeRouter from './Trade.router.js';
+import usersRouter from './Users.route.js';
 
 const router = express.Router();
 
-// Recherche d'utilisateur
-router.post('/users/search', authentificationToken, UsersController.searchUser)
+router.use('/', usersRouter)
+router.use('/', cardsRouter)
+router.use('/', friendsRouter)
+router.use('/', boosterRouter)
+router.use('/', tradeRouter)
 
-// Connexion, inscription, déconnexion et récupération de l'utilisateur
-router.post('/users/login', UsersController.login)
-router.post('/users/signup', UsersController.signup)
-router.post('/users/logout', UsersController.logout)
-router.get('/users/getUser', authentificationToken, AuthentificationController.getUser)
 
-// Récupération des cartes, récupération d'une carte, ajout d'une carte
-router.get('/cards', CardsController.index)
-router.get('/cards/:id', CardsController.show)
-router.post('/cards/create', CardsController.store)
-router.get('/users/collection', authentificationToken, CardsController.showUserCollection)
-
-// Récupération des cartes d'un utilisateur, ajout d'une carte à un utilisateur, suppression d'une carte d'un utilisateur
-router.get('/users/cards/show', authentificationToken, CardsController.showUserCards)
-router.post('/users/cards/add/:cardId', authentificationToken, CardsController.addCardToUser)
-router.post('/users/cards/delete/:cardId', authentificationToken, CardsController.deleteCardFromUser)
-
-// Envoi, acceptation, refus et annulation de demande d'ami
-router.post('/users/friendRequests/send/:receiverId', authentificationToken, FriendRequestsController.sendFriendRequest)
-router.put('/users/friendRequests/accept/:requestId', authentificationToken, FriendRequestsController.acceptFriendRequest)
-router.put('/users/friendRequests/decline/:requestId', authentificationToken, FriendRequestsController.declineFriendRequest)
-router.delete('/users/friendRequests/cancel/:requestId', authentificationToken, FriendRequestsController.cancelFriendRequest)
-router.delete('/users/friendRequests/remove/:requestId', authentificationToken, FriendRequestsController.removeFriend)
-// router.get('/users/test', FriendRequestsController.test)
-router.get('/users/friends', authentificationToken, FriendRequestsController.getFriends)
-
-// Récuperation du temps de booster, mise à jour du temps de booster, ouverture du booster
-router.get('/users/booster', authentificationToken, BoosterController.getTimer)
-router.put('/users/booster', authentificationToken, BoosterController.updateTimer)
-router.post('/users/booster/open', authentificationToken, BoosterController.openBooster)
-
-// Envoi, acceptation, refus et annulation d'échange
-router.post('/users/tradeRequests/send', authentificationToken, TradeController.askTrade)
-router.put('/users/tradeRequests/accept/:requestId', authentificationToken, TradeController.acceptTrade)
-router.delete('/users/tradeRequests/decline/:requestId', authentificationToken, TradeController.declineTrade)
-router.delete('/users/tradeRequests/cancel/:requestId', authentificationToken, TradeController.cancelTrade)
-router.get('/users/tradeRequests/:requestId', authentificationToken, TradeController.seeTradeRequest)
-
+// ----------- IOT Routes for Raspberry Pi ----------- //
 
 let lastVisited = "Gryffindor";
 
