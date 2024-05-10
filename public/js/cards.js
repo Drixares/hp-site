@@ -159,7 +159,7 @@ searchBar.addEventListener('input', (e) => {
     
     // looking for the card
     if(newArray.length <= 0) {
-      document.getElementById('boxError').innerText = 'Aucun carte trouvée.'
+      document.getElementById('boxError').innerText = 'No cards found.'
     } else {
       for (let card = 0; card < newArray.length; card++) {
         const cardFiltered = document.getElementById(`${newArray[card].id}`);

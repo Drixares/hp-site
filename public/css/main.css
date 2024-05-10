@@ -1,7 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap");
 
 :root {
-  /* Mode 1 */
   /* colors */
   --black: #0e0e11;
   --blue-50: #f5f6fa;
@@ -21,6 +20,20 @@
   --primary: #d7b972;
   --secondary: #535AFF;
   --secondary-hover: #434aff;
+
+  /* font sizes */
+  --h1-size: calc(30px + 4vw);
+  --h2-size: calc(20px + 2vw);
+  --h3-size: calc(16px + 1vw);
+  --text-mp-size: calc(12px + 0.1vw);
+  --text-p-size: calc(14px + 0.2vw);
+  --text-m-size: calc(16px + 0.2vw);
+  --text-infos-size: calc(10px + 0.5vw);
+  --padding-inline: 5vw;
+  --padding-inline2: 15vw;
+  --border-style: 1px solid var(--blue-800);
+  --danger-color-hover: rgb(180, 65, 65);
+
 
   /* Dark */
   /* colors */
@@ -49,4 +62,43 @@
   --texte-sous-texte-light: var(--blue-900);
   --texte-sous-texte-2-light: var(--blue-400);
   --transparent-section-light: rgba(234, 236, 244, .9);
+}
+
+
+:root[data-theme="dark"] {
+  --bordure-objet: var(--bordure-objet-dark);
+  --bordure-section: var(--bordure-section-dark);
+  --fond-block-infos: var(--fond-block-infos-dark);
+  --fond-hovered: var(--fond-hovered-dark);
+  --fond-hovered-menu: var(--fond-hovered-menu-dark);
+  --fond-primaire: var(--fond-primaire-dark);
+  --texte-primaire: var(--texte-primaire-dark);
+  --texte-reversed: var(--texte-reversed-dark);
+  --texte-sous-texte: var(--texte-sous-texte-dark);
+  --texte-sous-texte-2: var(--texte-sous-texte-2-dark);
+  --dark-filter: var(--filter);
+  --transparent-section: var(--transparent-section-dark);
+}
+
+:root[data-theme="light"] {
+  --bordure-objet: var(--bordure-objet-light);
+  --bordure-section: var(--bordure-section-light);
+  --fond-block-infos: var(--fond-block-infos-light);
+  --fond-hovered: var(--fond-hovered-light);
+  --fond-hovered-menu: var(--fond-hovered-menu-light);
+  --fond-primaire: var(--fond-primaire-light);
+  --texte-primaire: var(--texte-primaire-light);
+  --texte-reversed: var(--texte-reversed-light);
+  --texte-sous-texte: var(--texte-sous-texte-light);
+  --texte-sous-texte-2: var(--texte-sous-texte-2-light);
+  --light-filter: var(--filter);
+  --transparent-section: var(--transparent-section-light);
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }

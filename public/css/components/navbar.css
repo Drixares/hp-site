@@ -1,0 +1,23 @@
+header > .mainNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 125px;
+  width: 100%;
+  position: relative;
+}
+
+.navBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style-type: none;
+  gap: 4vw;
+}
+
+.navLink {
+  color: var(--texte-primaire);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-size: var(--text-p-size);
+}

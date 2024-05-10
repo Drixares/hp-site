@@ -93,7 +93,7 @@ header {
 .imgBox {
   width: clamp(50px, 20%, 200px);
   aspect-ratio: 1 / 1;
-  border-radius: 100vw;
+  border-radius: 20px;
   overflow: hidden;
 }
 

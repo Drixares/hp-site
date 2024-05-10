@@ -581,6 +581,11 @@ function loopTimer(timerMs) {
 }
 
 function updateTimer(timerMs, afterOpen = false) {
+    
+    const date = new Date(+timerMs);
+    const hour = date.getUTCHours();
+    const min = date.getUTCMinutes();
+    const seconds = date.getUTCSeconds();
 
     if (afterOpen === true) {
         timerData = document.createElement('span');
@@ -589,11 +594,7 @@ function updateTimer(timerMs, afterOpen = false) {
         timerData = document.querySelector('.timerBooster');
     }
 
-    let hoursSinceLastOpened = Math.floor(timerMs / 1000 / 60 / 60);
-    let minutesSinceLastOpened = Math.floor((timerMs / 1000 / 60) % 60);
-    let secondsSinceLastOpened = Math.floor((timerMs / 1000) % 60);
-
-    timerData.innerText = `${hoursSinceLastOpened}h ${minutesSinceLastOpened}m ${secondsSinceLastOpened}s`;
+    timerData.innerText = `${hour}h ${min}m ${seconds}s`;
 }
 
 function updateProfile(userData, cardsData) {
@@ -965,7 +966,7 @@ async function fetchUsersCards() {
         if (cardNumberData) {
             updateProfile(userData, cardsData);
         }
-
+        
         // fetch only on the user's collection page   
         if (document.getElementById('cardsContainer')) {
             // fetching the cards
@@ -987,5 +988,5 @@ async function fetchUsersCards() {
     
   })();
   
-  const openTradeWindow = createOpenTradeWindow();
-  const openTradeInfosWindow = createTradeInfosWindow();
+const openTradeWindow = createOpenTradeWindow();
+const openTradeInfosWindow = createTradeInfosWindow();
