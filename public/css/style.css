@@ -246,7 +246,7 @@ main {
 
 .question svg {
   fill: var(--texte-primaire);
-  transition: rotate 0.2s;
+  transition: transform 0.2s;
 }
 
 .question:hover svg {
@@ -254,7 +254,7 @@ main {
 }
 
 .faqObject:has(.answer:not(.answer.hidden)) svg {
-  rotate: 45deg;
+  transform: rotate(45deg);
 }
 
 .answer {

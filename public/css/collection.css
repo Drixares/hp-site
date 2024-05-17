@@ -120,12 +120,12 @@ html {
   height: 100%;
   object-fit: cover;
   display: block;
-  scale: 1.05;
-  transition: scale 0.2s ease-in-out;
+  transform: scale(1.05);
+  transition: transform 0.2s ease-in-out;
 }
 
 .card:hover img {
-  scale: 1;
+  transform: scale(1);
 }
 
 figcaption {
