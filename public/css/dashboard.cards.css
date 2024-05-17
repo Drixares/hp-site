@@ -64,6 +64,32 @@
   align-items: center;
 }
 
+.favBtn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  background-color: var(--fond-block-infos);
+  border: 1px solid var(--bordure-objet);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.favBtn > i {
+  color: var(--danger-color);
+  font-size: var(--text-m-size);
+  transform: translateY(1px);
+}
+
+.favBtn > i.active {
+  color: var(--danger-color);
+  fill: var(--danger-color);
+}
+
 .cardsBox__cardsContainer__card__imgBox img {
   width: 100%;
   height: 100%;

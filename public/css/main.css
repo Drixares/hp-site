@@ -16,6 +16,7 @@
   --blue-950: #161927;
   --filter: #161927bd;
   --danger-color: #BF5454;
+  --danger-color-hover: rgb(180, 65, 65);
   --green: #01c101;
   --primary: #d7b972;
   --secondary: #535AFF;
@@ -32,7 +33,6 @@
   --padding-inline: 5vw;
   --padding-inline2: 15vw;
   --border-style: 1px solid var(--blue-800);
-  --danger-color-hover: rgb(180, 65, 65);
 
 
   /* Dark */

@@ -80,7 +80,7 @@ class UsersController {
     
     try {
 
-      const userId = req.user.data.id;
+      const userId = req.user.id;
       const searchq = req.body.searchQuery;
 
       if (!searchq || !/\S/.test(searchq)) return res.json({ message: "Search query is required and should not be only spaces" });

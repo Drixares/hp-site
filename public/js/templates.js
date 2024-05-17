@@ -4,14 +4,6 @@ function notificationTemplate(request, direction, requestType) {
   notification.classList.add('sliderBox__sliderContainer__notifBox__notifList__notifElement');
   notification.setAttribute('data-request', request.id);
 
-  // const requestData = {
-  //   id: request.id,
-  //   friend: request.sender?.name || request.receiver?.name,
-  //   status: request.status,
-  // }
-
-  // requestType === 'friend' ? requestData.type = 'friend' : requestData.type = 'trade';
-
   if (direction === 'received' && requestType === 'friendrequest' && request.status === 'PENDING') {
     
     notification.setAttribute('data-name', request.sender.name);
@@ -272,9 +264,12 @@ function createCardCollection(cardData, i) {
   const cardElement = document.createElement('div');
   cardElement.classList.add('cardsBox__cardsContainer__card');
 
+  const icon = cardData.favorite ? 'fa-solid' : 'fa-regular';
+
   cardElement.innerHTML = `
   <div class="cardsBox__cardsContainer__card__imgBox">
       <span class="cardsBox__cardsContainer__card__quantity" >x${cardData.quantity}</span>
+      <span class="favBtn"><i class="${icon} fa-heart" data-id="${cardData.card.id}"></i></span>
       <img src="${cardData.card.image}" alt="" srcset="">
     </div>
     <div class="cardsBox__cardsContainer__card__textBox">

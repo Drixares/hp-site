@@ -9,7 +9,7 @@ class FriendRequestsController {
     try {
 
       const { receiverId } = req.params;
-      const userId = req.user.data.id;
+      const userId = req.user.id;
 
       if (userId === receiverId) return res.status(400).json({ message: 'You cannot ask yourself to be friend :/' })
 
@@ -80,7 +80,7 @@ class FriendRequestsController {
     try {
       
       const { requestId } = req.params;
-      const userId = req.user.data.id;
+      const userId = req.user.id;
 
       const isFriendRequest = await prisma.friendRequest.findFirst({
         where: {
@@ -131,7 +131,7 @@ class FriendRequestsController {
     try {
       
       const { requestId } = req.params;
-      const userId = req.user.data.id;
+      const userId = req.user.id;
 
       const friendRequest = await prisma.friendRequest.findFirst({
         where: {
@@ -174,7 +174,7 @@ class FriendRequestsController {
     try {
       
       const { requestId } = req.params;
-      const userId = req.user.data.id;
+      const userId = req.user.id;
 
       const friendRequest = await prisma.friendRequest.findFirst({
         where: {
@@ -212,7 +212,7 @@ class FriendRequestsController {
     try {
       
       const { requestId } = req.params;
-      const userId = req.user.data.id;
+      const userId = req.user.id;
 
       // Verify if the friend exists
       const friend = await prisma.friendRequest.findFirst({
@@ -324,7 +324,7 @@ class FriendRequestsController {
 
     try {
       
-      const userEmail = req.user.data.email;
+      const userEmail = req.user.email;
 
       const allFriends = await prisma.user.findMany({
         where: {

@@ -9,19 +9,25 @@ export function authentificationToken(req, res, next) {
 
   if (token == null) return res.sendStatus(401);
 
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, payload) => {
+  jwt.verify(token, process.env.TOKEN_SECRET, async (err, payload) => {
     
     if (err) return res.sendStatus(403);
 
-    const user = prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
-        email: payload.data
+        email: payload.data.email
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        booster: true,
       }
     });
 
     if (!user) return res.sendStatus(403)
 
-    req.user = payload;
+    req.user = user;
 
     next();
   });

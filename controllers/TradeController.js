@@ -9,7 +9,7 @@ class TradeController {
     try {
       
       const { friendId, requestedCard, giftCard} = req.body;
-      const userId = req.user.data.id;
+      const userId = req.user.id;
 
       if (!friendId || !requestedCard || !giftCard) return res.status(400).json({ message: "Missing required fields." })
       
@@ -118,7 +118,7 @@ class TradeController {
     try {
       
       const { requestId } = req.params;
-      const userId = req.user.data.id;
+      const userId = req.user.id;
 
       // verify if the request exists
       const tradeRequest = await prisma.tradeRequest.findFirst({
@@ -288,7 +288,7 @@ class TradeController {
     try {
       
       const { requestId } = req.params;
-      const userId = req.user.data.id;
+      const userId = req.user.id;
 
       // verify if the request exists
       const tradeRequest = await prisma.tradeRequest.findFirst({
@@ -373,7 +373,7 @@ class TradeController {
     try {
       
       const { requestId } = req.params;
-      const userId = req.user.data.id;
+      const userId = req.user.id;
 
       // verify if the request exists
       const tradeRequest = await prisma.tradeRequest.findFirst({
@@ -444,7 +444,7 @@ class TradeController {
 
     try {
       
-      const userId = req.user.data.id;
+      const userId = req.user.id;
       const { requestId } = req.params;
 
       // verify if the request exists

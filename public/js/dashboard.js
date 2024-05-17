@@ -404,6 +404,31 @@ document.addEventListener('click', async (e) => {
 
         openTradeInfosWindow(e.target)
 
+    } else if (target.matches('.favBtn i')) {
+        
+        const favBtn = e.target.closest('.favBtn i');
+
+        try {
+            
+            const response = await fetch('/users/cards/favorite/' + favBtn.dataset.id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${token}`
+                }
+            })
+
+            if (response.status === 200) {
+                const data = await response.json();
+                const icon = data.favorite ? 'fa-solid' : 'fa-regular';
+                favBtn.className = `${icon} fa-heart`;
+            }
+
+        } catch (error) {
+            alert(error.message)
+        }
+
+    
     }
     
 })
@@ -909,7 +934,6 @@ function playCheckAnimation() {
         }, 500);
     })
 }
-
 
 async function createCards(cardsData) {
 

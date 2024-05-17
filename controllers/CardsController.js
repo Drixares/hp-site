@@ -77,7 +77,7 @@ class CardsController {
 
       const userFound = await prisma.user.findUnique({
         where: {
-          email: user.data.email,
+          email: user.email,
         }
       })
       
@@ -107,7 +107,7 @@ class CardsController {
 
       const userFound = await prisma.user.findUnique({
         where: {
-          email: user.data.email,
+          email: user.email,
         }
       })
 
@@ -137,7 +137,7 @@ class CardsController {
 
       const userFound = await prisma.user.findUnique({
         where: {
-          email: user.data.email,
+          email: user.email,
         }
       })
 
@@ -194,11 +194,14 @@ class CardsController {
     
     try {
 
-      const userId = req.user.data.id;
+      const userId = req.user.id;
       
       const usersCards = await prisma.userCard.findMany({
         where: {
           userId: userId,
+        },
+        orderBy: {
+          favorite: 'desc'
         },
         select: {
           card: {
@@ -206,9 +209,10 @@ class CardsController {
               id: true,
               name: true,
               house: true,
-              image: true
+              image: true,
             }
           },
+          favorite: true,
           quantity: true
         }
       })
@@ -216,6 +220,66 @@ class CardsController {
       if (!usersCards) return res.status(404).json({ message: 'Not cards found' })
 
       return res.status(200).json(usersCards)
+
+    } catch (error) {
+      
+      return res.status(500).json({ message: error.message })
+    }
+
+  }
+
+  async changeFovoriteCard(req, res) {
+
+    try {
+      
+      const { id } = req.user;
+      const { cardId } = req.params;
+
+      const card = await prisma.userCard.findUnique({
+        where: {
+          userId_cardId: {
+            userId: id,
+            cardId: parseInt(cardId)
+          }
+        }
+      })
+
+      if (!card) return res.status(404).json({ message: 'Card not found' })
+
+      if (card.favorite) {
+        await prisma.userCard.update({
+          where: {
+            userId_cardId: {
+              userId: id,
+              cardId: parseInt(cardId)
+            }
+          },
+          data: {
+            favorite: false
+          },
+          select: {
+            favorite: true
+          }
+        })
+      } else {
+        await prisma.userCard.update({
+          where: {
+            userId_cardId: {
+              userId: id,
+              cardId: parseInt(cardId)
+            }
+          },
+          data: {
+            favorite: true
+          },
+          select: {
+            favorite: true
+          }
+        })
+      }
+
+      return res.status(200).json({ success: 'Favorite card changed', favorite: !card.favorite})
+
 
     } catch (error) {
       

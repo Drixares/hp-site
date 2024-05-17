@@ -6,7 +6,7 @@ class BoosterController {
     
     try {
       
-      const userId = req.user.data.id;
+      const userId = req.user.id;
 
       const lastBooster = await prisma.user.findUnique({
         where: {
@@ -32,7 +32,7 @@ class BoosterController {
 
     try {
       
-      const userEmail = req.user.data.email;
+      const userEmail = req.user.email;
       // const nextBooster = Date.now() + 1000 * 60 * 60 * 24
       const nextBooster = Date.now() + 1000 * 3
       
@@ -63,7 +63,7 @@ class BoosterController {
     try {
 
       let cards = [];
-      const userEmail = req.user.data.email;
+      const userEmail = req.user.email;
 
       // Get all cards id
       const cardsID = await prisma.card.findMany({
