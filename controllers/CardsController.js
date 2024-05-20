@@ -228,7 +228,7 @@ class CardsController {
 
   }
 
-  async changeFovoriteCard(req, res) {
+  async changeFavoriteCard(req, res) {
 
     try {
       
@@ -287,6 +287,39 @@ class CardsController {
     }
 
   }
+
+  // async getUserCards(req, res) {
+
+  //   try {
+
+  //     const { id } = req.user;
+      
+  //     const allCards = await prisma.userCard.findMany({
+  //       where: {
+  //         userId: id
+  //       },
+  //       select: {
+  //         cardId: true,
+  //         quantity: true,
+  //       }
+  //     })
+      
+  //     let total = 0;
+  //     allCards.forEach(card => {
+  //       total += card.quantity;
+  //     });
+
+  //     if (!allCards) return res.status(404).json({ message: 'No cards found' })
+
+  //     return res.status(200).json({cards: allCards, total})
+
+  //   } catch (error) {
+      
+  //     return res.status(500).json({ message: error.message })
+  //   }
+
+
+  // }
 
 }
 

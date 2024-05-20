@@ -26,6 +26,8 @@ function createCards() {
     const card = document.createElement("figure");
     card.className = "card";
     card.id = `${perso.id}`
+    card.setAttribute('data-name', perso.name);
+    card.setAttribute('data-house', perso.house);
 
     // If there is no image given in the api for a personnage, use a img in my folder.
     const image = perso.image;
@@ -64,8 +66,6 @@ function createCards() {
     boxCards.appendChild(card);
   });
 }
-
-
 
 filterTags.forEach((filter) => {
   filter.addEventListener("click", addTag);
@@ -144,43 +144,57 @@ searchBar.addEventListener('input', (e) => {
   // reset of the box error
   document.getElementById('boxError').innerText = '';
 
-  // Put all the cards hidden
-  const allCards =  document.querySelectorAll('.card');
-  allCards.forEach(card => {
-    card.classList.add('hidden');
-  });
-
   // then get the search value in lowercase to use it for the filter (we remove the whites spaces too)
   const searchValue =  e.target.value.toLowerCase().replace(/\s/g, "");
+  const cards = document.querySelectorAll('.card');
 
-  // if not empty, let's filter !
-  if(searchValue) {
-    let newArray = dataArray.filter(perso => perso.name.toLowerCase().startsWith(searchValue.toLowerCase()));
-    
-    // looking for the card
-    if(newArray.length <= 0) {
-      document.getElementById('boxError').innerText = 'No cards found.'
-    } else {
-      for (let card = 0; card < newArray.length; card++) {
-        const cardFiltered = document.getElementById(`${newArray[card].id}`);
-        cardFiltered.classList.remove('hidden');
-      }
+
+  // If search value is empty
+  if (searchValue === '') {
+
+    // We loo at the active filter
+    const house = document.querySelector('.filterTag[data-active="true"]')?.dataset.name.toLowerCase();
+
+    // If there is no active filter, we show all the cards
+    if (!house) {
+      cards.forEach(card => {
+        card.classList.remove('hidden');
+      });
+      return;
     }
 
-  // if the search value is empty, put all cards visible. 
-  } else {
-    allCards.forEach(card => {
+    // If there is an active filter, we show only the cards of the house
+    cards.forEach(card => {
+      if (card.dataset.house.toLowerCase() === house) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    return;
+  }  
+
+   // If the search value is not empty, we hide all the cards
+  // and we show only the cards that contains the search value in their data-name
+  cards.forEach(card => {
+    const name = card.dataset.name.toLowerCase();
+
+    if (!name.includes(searchValue)) {
+      card.classList.add('hidden');
+    } else {
       card.classList.remove('hidden');
-    })
-  }
-  
+    }
+
+  });
+
   
 })
+
 
 async function start() {
   await getPersonnage();
 }
 
 start();
-
 

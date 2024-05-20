@@ -1,6 +1,6 @@
 import express from 'express';
 import ip from 'ip';
-import router from './routes/start.js';
+import router from './routes/_start.js';
 
 const ipAdress = ip.address();
 
