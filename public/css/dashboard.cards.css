@@ -1,5 +1,6 @@
 @import url('./main.css');
 @import url('./dashboard.css');
+@import url('./components/notifPopup.css');
 
 .cardsBox > * + *{
   margin-top: 20px;
@@ -16,6 +17,11 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: 15px;
+}
+
+.noCardsMessage {
+  color: var(--texte-sous-texte-2);
+  font-size: var(--text-m-size);
 }
 
 .cardsBox__cardsContainer__card {

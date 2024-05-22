@@ -295,9 +295,9 @@ function templateTradeInfosWindow(tradeData, cache) {
         <h3 class="infosTradeBox__infosTradeContainer__mainContent__title">Trade request from <span class="infosTradeBox__friendName">${tradeData.sender.name}</span></h3>
         <div class="infosTradeBox__infosTradeContainer__mainContent__tradeBox">
           <div class="infosTradeBox__infosTradeContainer__mainContent__tradeBox__giveBox">
-            <span>You give</span>
+            <span>You receive</span>
             <div class="tradeElement">
-              <span class="tradeElement__name">${tradeData.receivedCard.name}</span>
+              <span class="tradeElement__name">${tradeData.giftedCard.name}</span>
               <span class="tradeElement__number">x1</span>
             </div>
           </div>
@@ -305,9 +305,9 @@ function templateTradeInfosWindow(tradeData, cache) {
             <img src="./ressources/icons/tradeIcon.svg" alt="trade icon">
           </div>
           <div class="infosTradeBox__infosTradeContainer__mainContent__tradeBox__receiveBox">
-            <span>You receive</span>
+            <span>You give</span>
             <div class="tradeElement">
-              <span class="tradeElement__name">${tradeData.giftedCard.name}</span>
+              <span class="tradeElement__name">${tradeData.receivedCard.name}</span>
               <span class="${ownsCard ? "tradeElement__number" : "tradeElement__number notOwned"}">${ownsCard ? "x1" : "x0"}</span>
             </div>
           </div>

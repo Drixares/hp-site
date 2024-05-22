@@ -356,6 +356,7 @@ document.addEventListener('click', async (e) => {
                     document.querySelector('.infosTradeBox').remove();
                     filter.classList.remove('active');
                     await updateCardsData()
+                    createNotificationPopup("You've accepted the trade request")
                 }
 
             } else {
@@ -938,7 +939,12 @@ function playCheckAnimation() {
 async function createCards(cardsData) {
 
     const cardsContainer = document.getElementById('cardsContainer');
-  
+    
+    if (!cardsData.length) {
+        cardsContainer.innerHTML = '<p class="noCardsMessage">No cards found</p>';
+        return;
+    }
+
     cardsData.forEach((card, i) => {
       cardsContainer.appendChild(createCardCollection(card, i));
     });
@@ -966,9 +972,10 @@ async function fetchUsersCards() {
         })
 
         if (response.ok) {
-        const cards = await response.json();
-        return cards
-        }
+            const { cards } = await response.json();
+
+            return cards;
+        } 
 
         return null;
 
@@ -979,6 +986,26 @@ async function fetchUsersCards() {
     }
 
 }
+
+function createNotificationPopup(message) {
+
+    const notificationPopup = document.createElement('div');
+    notificationPopup.classList.add('notificationPopup');
+
+
+    const notificationText = document.createElement('p');
+    notificationText.classList.add('notificationPopup__text');
+    notificationText.innerText = message;
+
+    notificationPopup.appendChild(notificationText);
+    document.getElementById('wrapper').appendChild(notificationPopup);
+
+    setTimeout(() => {
+        notificationPopup.remove();
+    }, 3000)
+    return;
+}
+
 
 // Fetch data from the server and update the profile at the loading of the page
 (async () => {
@@ -996,6 +1023,7 @@ async function fetchUsersCards() {
             // fetching the cards
             const fetchCards = await fetchUsersCards();
             const cards = await fetchCards();
+
             createCards(cards);
         }
         
